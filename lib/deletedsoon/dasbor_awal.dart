@@ -191,17 +191,17 @@ class _DasborAwalState extends State<DasborAwal> {
                           child: Row(
                             children: [
                               // WhatsApp
-                              SvgPicture.asset(
-                                "assets/whatsapp.svg",
-                                color: Colors.white,
-                                height: 20,
-                              ),
-                              SizedBox(width: 8),
-                              Text(
-                                "+6289765345729",
-                                style: TextStyle(color: Colors.white),
-                              ),
-                              SizedBox(width: 20),
+                              // SvgPicture.asset(
+                              //   "assets/whatsapp.svg",
+                              //   color: Colors.white,
+                              //   height: 20,
+                              // ),
+                              // SizedBox(width: 8),
+                              // Text(
+                              //   "+6289765345729",
+                              //   style: TextStyle(color: Colors.white),
+                              // ),
+                              // SizedBox(width: 20),
 
                               // Website
                               SvgPicture.asset(
