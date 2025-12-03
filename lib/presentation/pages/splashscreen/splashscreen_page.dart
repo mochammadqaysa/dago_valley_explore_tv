@@ -34,8 +34,8 @@ class SplashScreen extends GetView<SplashController> {
       children: [
         // Logo
         Container(
-          width: 300,
-          height: 300,
+          width: 150,
+          height: 150,
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(20),

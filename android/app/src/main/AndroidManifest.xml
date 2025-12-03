@@ -1,6 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <application
-        android:label="dago_valley_explore_tv"
+        android:label="Dago Valley Explore"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
@@ -37,6 +37,8 @@
          https://developer.android.com/reference/android/content/Intent#ACTION_PROCESS_TEXT.
 
          In particular, this is used by the Flutter engine in io.flutter.plugin.text.ProcessTextPlugin. -->
+    
+    <uses-feature android:name="android.software.leanback" android:required="false" />
     <queries>
         <intent>
             <action android:name="android.intent.action.PROCESS_TEXT"/>

@@ -743,12 +743,12 @@ class _CashcalculatorPageState extends State<CashcalculatorPage> {
                                       Text(
                                         'Rp ${(diskonNominal != null || diskonPersen != null) ? _formatCurrencyDisplay(result.cicilanBulananSetelahDiskon.round()) : _formatCurrencyDisplay(result.cicilanBulanan.round())}',
                                         style: TextStyle(
-                                          fontSize: 18,
+                                          fontSize: 16,
                                           fontWeight: FontWeight.bold,
                                           color: textColor,
                                         ),
                                       ),
-                                      const SizedBox(height: 6),
+                                      // const SizedBox(height: 6),
                                       if (diskonNominal != null ||
                                           diskonPersen != null)
                                         Column(
