@@ -88,6 +88,10 @@ flutter:
     - assets/menu/
     - assets/rumah/harmoni_106_112.mp4
     - assets/rumah/
+    - assets/rumah/harmoni/harmoni_100_108/
+    - assets/rumah/harmoni/harmoni_129_144/
+    - assets/rumah/harmoni/harmoni_131_150/
+    - assets/rumah/harmoni/harmoni_140_108/
     - assets/promo/
     - assets/event/
     - assets/walkthrough/
