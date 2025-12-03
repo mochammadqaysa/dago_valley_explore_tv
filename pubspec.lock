@@ -230,6 +230,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "5.0.0"
+  flutter_onscreen_keyboard:
+    dependency: "direct main"
+    description:
+      name: flutter_onscreen_keyboard
+      sha256: "4e261845a0951b8438625c8036a793e6f600a92be0c879badad7fbeaea965ec0"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.3.0"
   flutter_pdfview:
     dependency: "direct main"
     description:

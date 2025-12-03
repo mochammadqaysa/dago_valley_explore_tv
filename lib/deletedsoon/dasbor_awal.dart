@@ -190,7 +190,7 @@ class _DasborAwalState extends State<DasborAwal> {
                           ),
                           child: Row(
                             children: [
-                              // WhatsApp
+                              // // WhatsApp
                               // SvgPicture.asset(
                               //   "assets/whatsapp.svg",
                               //   color: Colors.white,

@@ -28,10 +28,10 @@ class ProductCard extends StatelessWidget {
     return InkWell(
       onTap: onButtonPressed,
       child: Container(
-        width: 400,
+        width: 350,
         decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(8),
           boxShadow: [
             BoxShadow(
               color: Colors.black.withOpacity(0.1),
@@ -41,7 +41,7 @@ class ProductCard extends StatelessWidget {
           ],
         ),
         child: ClipRRect(
-          borderRadius: const BorderRadius.all(Radius.circular(16)),
+          borderRadius: const BorderRadius.all(Radius.circular(8)),
           child: Stack(
             children: [
               // === Layer 1: Gambar ===
@@ -87,7 +87,7 @@ class ProductCard extends StatelessWidget {
                       Text(
                         "type".tr + " ${houseModel.model}",
                         style: const TextStyle(
-                          fontSize: 18,
+                          fontSize: 10,
                           fontWeight: FontWeight.w600,
                           color: Colors.black,
                         ),
@@ -95,7 +95,7 @@ class ProductCard extends StatelessWidget {
                       Text(
                         houseModel.type,
                         style: const TextStyle(
-                          fontSize: 16,
+                          fontSize: 8,
                           fontWeight: FontWeight.w600,
                           color: Colors.black,
                         ),
@@ -114,7 +114,7 @@ class ProductCard extends StatelessWidget {
                   glassColor: Colors.black,
                   glassAccentColor: Colors.grey,
                   showBorder: false,
-                  padding: EdgeInsets.symmetric(horizontal: 16, vertical: 15),
+                  padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                   borderRadius: 0,
                   blurIntensity: 1,
                   // padding: const EdgeInsets.symmetric(
@@ -138,7 +138,7 @@ class ProductCard extends StatelessWidget {
                           Text(
                             buttonText,
                             style: const TextStyle(
-                              fontSize: 15,
+                              fontSize: 8,
                               fontWeight: FontWeight.normal,
                               color: Colors.white,
                             ),

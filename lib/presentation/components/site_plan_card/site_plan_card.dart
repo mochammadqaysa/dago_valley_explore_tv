@@ -112,8 +112,8 @@ class SitePlanCard extends StatelessWidget {
                         : Colors.grey[300]!,
                     showBorder: false,
                     padding: const EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 15,
+                      horizontal: 6,
+                      vertical: 1,
                     ),
                     borderRadius: 0,
                     blurIntensity: 1,
@@ -126,7 +126,7 @@ class SitePlanCard extends StatelessWidget {
                             Text(
                               title,
                               style: TextStyle(
-                                fontSize: 20,
+                                fontSize: 12,
                                 fontWeight: FontWeight.normal,
                                 color: Colors.white,
                               ),
@@ -145,14 +145,14 @@ class SitePlanCard extends StatelessWidget {
                             ),
                             shape: const CircleBorder(),
                             padding: const EdgeInsets.symmetric(
-                              horizontal: 15,
-                              vertical: 15,
+                              horizontal: 10,
+                              vertical: 10,
                             ),
-                            minimumSize: const Size(40, 40),
+                            minimumSize: const Size(20, 20),
                           ),
                           child: Icon(
                             Icons.arrow_forward,
-                            size: 20,
+                            size: 10,
                             color: Colors.white,
                           ),
                         ),

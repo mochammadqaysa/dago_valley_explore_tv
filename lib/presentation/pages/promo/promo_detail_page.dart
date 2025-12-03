@@ -144,7 +144,10 @@ class PromoDetailPage extends GetView<PromoController> {
                     children: [
                       // Close Button
                       Padding(
-                        padding: const EdgeInsets.all(16.0),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16.0,
+                          vertical: 10,
+                        ),
                         child: Row(
                           children: [
                             Material(
@@ -191,7 +194,9 @@ class PromoDetailPage extends GetView<PromoController> {
                                     children: [
                                       // Main Carousel
                                       Container(
-                                        height: 800,
+                                        height:
+                                            MediaQuery.of(context).size.height *
+                                            0.8,
                                         decoration: BoxDecoration(
                                           borderRadius: BorderRadius.circular(
                                             20,
@@ -249,20 +254,26 @@ class PromoDetailPage extends GetView<PromoController> {
                                         ),
                                       ),
 
-                                      const SizedBox(height: 20),
+                                      const SizedBox(height: 10),
                                     ],
                                   ),
                                 ),
 
-                                const SizedBox(width: 40),
+                                // const SizedBox(width: 5),
 
                                 // Right Side - Content
                                 Expanded(
                                   flex: 4,
                                   child: Container(
-                                    padding: const EdgeInsets.all(30),
+                                    height:
+                                        MediaQuery.of(context).size.height *
+                                        0.8,
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 10,
+                                      vertical: 2,
+                                    ),
                                     child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(20),
+                                      borderRadius: BorderRadius.circular(0),
                                       child: BackdropFilter(
                                         filter: ImageFilter.blur(
                                           sigmaX: 10,
@@ -299,7 +310,7 @@ class PromoDetailPage extends GetView<PromoController> {
                                                                 .en
                                                                 .title,
                                                       style: const TextStyle(
-                                                        fontSize: 36,
+                                                        fontSize: 26,
                                                         fontWeight:
                                                             FontWeight.bold,
                                                         color: Colors.white,
@@ -318,7 +329,7 @@ class PromoDetailPage extends GetView<PromoController> {
                                                                 .en
                                                                 .subtitle,
                                                       style: TextStyle(
-                                                        fontSize: 18,
+                                                        fontSize: 13,
                                                         color: Colors.white
                                                             .withOpacity(0.8),
                                                         fontWeight:
@@ -337,23 +348,27 @@ class PromoDetailPage extends GetView<PromoController> {
                                                                 .en
                                                                 .description,
                                                       style: TextStyle(
-                                                        fontSize: 16,
+                                                        fontSize: 14,
                                                         color: Colors.white
                                                             .withOpacity(0.9),
                                                         height: 1.6,
                                                       ),
                                                     ),
-                                                    const SizedBox(height: 50),
+                                                    const SizedBox(height: 20),
                                                   ],
                                                 ),
                                               ),
                                             ),
 
-                                            const SizedBox(height: 30),
+                                            const SizedBox(height: 2),
 
                                             // Thumbnail navigation
                                             SizedBox(
-                                              height: 180,
+                                              height:
+                                                  MediaQuery.of(
+                                                    context,
+                                                  ).size.height *
+                                                  0.3,
                                               child: ListView.builder(
                                                 scrollDirection:
                                                     Axis.horizontal,

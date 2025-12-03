@@ -1,16 +1,12 @@
 import 'package:carousel_slider/carousel_controller.dart' as cs;
 import 'package:dago_valley_explore_tv/data/models/house_model.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
-import 'package:video_player_win/video_player_win.dart';
-
-// Type aliases for video player
-typedef VideoPlayerController = WinVideoPlayerController;
-typedef VideoPlayerValue = WinVideoPlayerValue;
+import 'package:video_player/video_player.dart';
+import 'dart:async';
 
 class DetailProductController extends GetxController {
   // Carousel controller
@@ -40,19 +36,14 @@ class DetailProductController extends GetxController {
   final RxMap<int, bool> videoInitialized = <int, bool>{}.obs;
   final RxMap<int, bool> videoPlaying = <int, bool>{}.obs;
   final RxMap<int, String?> videoErrors = <int, String?>{}.obs;
+  final RxMap<int, bool> videoMuted = <int, bool>{}.obs;
+
+  // Video controls visibility
+  final RxMap<int, bool> showControls = <int, bool>{}.obs;
+  Timer? _hideControlsTimer;
 
   // Track copied video files
   final List<File> _tempVideoFiles = [];
-
-  // Check if platform supports video
-  bool get supportsVideo {
-    if (kIsWeb) return false;
-    try {
-      return Platform.isWindows;
-    } catch (e) {
-      return false;
-    }
-  }
 
   @override
   void onInit() {
@@ -69,9 +60,8 @@ class DetailProductController extends GetxController {
       print('   Images: ${images.length}');
       print('   Videos: ${videos.length}');
 
-      // Initialize videos if available and on Windows
-      if (videos.isNotEmpty && supportsVideo) {
-        // Delay to avoid startup conflicts
+      // Initialize videos if available
+      if (videos.isNotEmpty) {
         Future.delayed(const Duration(milliseconds: 800), () {
           if (!isClosed) {
             _initializeVideoPlayers();
@@ -148,6 +138,8 @@ class DetailProductController extends GetxController {
         videoInitialized[videoIndex] = false;
         videoPlaying[videoIndex] = false;
         videoErrors[videoIndex] = null;
+        videoMuted[videoIndex] = false;
+        showControls[videoIndex] = true;
 
         print('\n📹 Video $i: $videoPath');
 
@@ -158,7 +150,7 @@ class DetailProductController extends GetxController {
         }
 
         // Create controller from file
-        print('   Creating WinVideoPlayerController...');
+        print('   Creating VideoPlayerController.. .');
         final controller = VideoPlayerController.file(tempFile);
         videoControllers[videoIndex] = controller;
 
@@ -189,17 +181,10 @@ class DetailProductController extends GetxController {
                     if (videoPlaying[videoIndex] != isPlaying) {
                       videoPlaying[videoIndex] = isPlaying;
                     }
-
-                    // Auto-loop if completed
-                    if (controller.value.isCompleted) {
-                      print('   Video completed, restarting...');
-                      controller.seekTo(Duration.zero);
-                      controller.play();
-                    }
                   }
                 });
 
-                print('✅ Video initialized successfully!');
+                print('✅ Video initialized successfully! ');
                 print('   Duration: ${controller.value.duration}');
                 print('   Size: ${controller.value.size}');
                 print('   Aspect Ratio: ${controller.value.aspectRatio}');
@@ -212,7 +197,6 @@ class DetailProductController extends GetxController {
                 videoInitialized[videoIndex] = false;
                 print('❌ $errorMsg');
 
-                // Dispose failed controller
                 try {
                   controller.dispose();
                   videoControllers[videoIndex] = null;
@@ -222,7 +206,6 @@ class DetailProductController extends GetxController {
               }
             });
 
-        // Delay between initializations
         await Future.delayed(const Duration(milliseconds: 300));
       } catch (e, stackTrace) {
         if (!isClosed) {
@@ -238,15 +221,26 @@ class DetailProductController extends GetxController {
     print('\n✅ Video initialization complete\n');
   }
 
-  // Check if current item is video
-  bool isVideo(int index) => index >= images.length;
+  // Show controls and start hide timer
+  void showVideoControls(int index) {
+    showControls[index] = true;
+    _resetHideTimer(index);
+  }
 
-  // Get video controller
-  VideoPlayerController? getVideoController(int index) =>
-      videoControllers[index];
+  // Hide controls
+  void hideVideoControls(int index) {
+    showControls[index] = false;
+  }
 
-  // Get video index
-  int getVideoIndex(int carouselIndex) => carouselIndex - images.length;
+  // Reset hide timer
+  void _resetHideTimer(int index) {
+    _hideControlsTimer?.cancel();
+    _hideControlsTimer = Timer(const Duration(seconds: 3), () {
+      if (!isClosed) {
+        hideVideoControls(index);
+      }
+    });
+  }
 
   // Toggle video playback
   void toggleVideoPlayback(int index) {
@@ -262,13 +256,38 @@ class DetailProductController extends GetxController {
           controller.play();
           print('▶️ Video playing at index $index');
         }
-      } else {
-        print('⚠️ Cannot toggle video at index $index - not initialized');
+        showVideoControls(index);
       }
     } catch (e) {
       print('❌ Error toggling playback: $e');
     }
   }
+
+  // Toggle mute
+  void toggleMute(int index) {
+    try {
+      final controller = videoControllers[index];
+      if (controller != null && controller.value.isInitialized) {
+        final isMuted = videoMuted[index] ?? false;
+        controller.setVolume(isMuted ? 1.0 : 0.0);
+        videoMuted[index] = !isMuted;
+        showVideoControls(index);
+        print('🔊 Video ${isMuted ? "unmuted" : "muted"} at index $index');
+      }
+    } catch (e) {
+      print('❌ Error toggling mute: $e');
+    }
+  }
+
+  // Check if current item is video
+  bool isVideo(int index) => index >= images.length;
+
+  // Get video controller
+  VideoPlayerController? getVideoController(int index) =>
+      videoControllers[index];
+
+  // Get video index
+  int getVideoIndex(int carouselIndex) => carouselIndex - images.length;
 
   // Pause all videos
   void pauseAllVideos() {
@@ -295,6 +314,7 @@ class DetailProductController extends GetxController {
       final controller = videoControllers[index];
       if (controller != null && controller.value.isInitialized) {
         controller.seekTo(position);
+        showVideoControls(index);
       }
     } catch (e) {
       print('❌ Error seeking: $e');
@@ -329,7 +349,8 @@ class DetailProductController extends GetxController {
     try {
       print('\n🛑 Disposing controllers...');
 
-      // Dispose video controllers
+      _hideControlsTimer?.cancel();
+
       final indices = videoControllers.keys.toList();
       for (final index in indices) {
         final controller = videoControllers[index];
@@ -347,7 +368,6 @@ class DetailProductController extends GetxController {
       }
       videoControllers.clear();
 
-      // Cleanup temp files
       _cleanupTempFiles();
 
       print('✅ All controllers disposed\n');

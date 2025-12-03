@@ -177,10 +177,14 @@ class CashcalculatorController {
     double? diskonPersen,
     required int tenorYears,
     required double marginPersen,
+    double? customDp,
   }) {
     final harga = model.hargaCash.toDouble();
-    final dp = calculateDp(harga: harga, method: method, tanpaDp: tanpaDp);
-    print('💰 Calculating with harga: $harga, dp: $dp');
+    final dp =
+        customDp ?? calculateDp(harga: harga, method: method, tanpaDp: tanpaDp);
+    print(
+      '💰 Calculating with harga: $harga, dp: $dp (custom: ${customDp != null})',
+    );
     final plafon = harga - dp;
     final months = tenorYears * 12;
     final marginRate = marginPersen / 100;
