@@ -379,7 +379,6 @@ class CustomDrawer extends GetView<SidebarController> {
   @override
   Widget build(BuildContext context) {
     final themeController = Get.find<ThemeController>();
-    // final fullscreenController = Get.find<FullscreenController>();
     return GetX<SidebarController>(
       init: controller,
       builder: (_) {
@@ -387,7 +386,7 @@ class CustomDrawer extends GetView<SidebarController> {
           child: AnimatedContainer(
             curve: Curves.easeInOutCubic,
             duration: const Duration(milliseconds: 500),
-            width: controller.isCollapsed ? 300 : 120,
+            width: controller.isCollapsed ? 300 : 70,
             margin: const EdgeInsets.only(bottom: 23, top: 23, left: 20),
             decoration: BoxDecoration(
               borderRadius: const BorderRadius.all(Radius.circular(16)),

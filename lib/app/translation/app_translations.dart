@@ -6,7 +6,7 @@ class AppTranslations extends Translations {
     // Indonesian
     'id_ID': {
       //homepage
-      'welcome_title': 'Rumah Mewah di Dago Valley Bandung',
+      'welcome_title': 'Selamat Datang di Dago Valley Bandung',
       'welcome_desc':
           'Nikmati kenyamanan hidup dengan fasilitas lengkap dan lingkungan yang asri. Temukan rumah impian Anda di perumahan eksklusif ini.',
       'view_promo': "Lihat Promo",
@@ -159,7 +159,7 @@ class AppTranslations extends Translations {
     // English
     'en_US': {
       //homepage
-      'welcome_title': 'Luxury House in Dago Valley Bandung',
+      'welcome_title': 'Welcome to Dago Valley Bandung',
       'welcome_desc':
           'Enjoy the comforts of life with complete facilities and a beautiful environment. Find your dream home in this exclusive residential area.',
       'view_promo': "View Promo",

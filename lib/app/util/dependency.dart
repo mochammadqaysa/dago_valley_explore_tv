@@ -14,7 +14,7 @@ class DependencyCreator {
 
     Get.put<ThemeController>(ThemeController(), permanent: true);
     Get.put<LocaleController>(LocaleController(), permanent: true);
-    // Get.put<FullscreenController>(FullscreenController(), permanent: true);
+    Get.put<FullscreenController>(FullscreenController(), permanent: true);
     print('ThemeController injected');
     Get.lazyPut(() => AuthenticationRepositoryIml());
     // Get.lazyPut(() => ArticleRepositoryIml());

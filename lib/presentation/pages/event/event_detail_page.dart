@@ -115,7 +115,10 @@ class EventDetailPage extends GetView<EventController> {
                     children: [
                       // Close Button
                       Padding(
-                        padding: const EdgeInsets.all(16.0),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 12.0,
+                          vertical: 10,
+                        ),
                         child: Row(
                           children: [
                             Material(
@@ -162,7 +165,9 @@ class EventDetailPage extends GetView<EventController> {
                                     children: [
                                       // Main Carousel
                                       Container(
-                                        height: 800,
+                                        height:
+                                            MediaQuery.of(context).size.height *
+                                            0.8,
                                         decoration: BoxDecoration(
                                           borderRadius: BorderRadius.circular(
                                             20,
@@ -207,20 +212,26 @@ class EventDetailPage extends GetView<EventController> {
                                         ),
                                       ),
 
-                                      const SizedBox(height: 20),
+                                      const SizedBox(height: 10),
                                     ],
                                   ),
                                 ),
 
-                                const SizedBox(width: 40),
+                                // const SizedBox(width: 5),
 
                                 // Right Side - Content
                                 Expanded(
                                   flex: 4,
                                   child: Container(
-                                    padding: const EdgeInsets.all(30),
+                                    height:
+                                        MediaQuery.of(context).size.height *
+                                        0.8,
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 10,
+                                      vertical: 2,
+                                    ),
                                     child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(20),
+                                      borderRadius: BorderRadius.circular(0),
                                       child: BackdropFilter(
                                         filter: ImageFilter.blur(
                                           sigmaX: 10,
@@ -251,7 +262,7 @@ class EventDetailPage extends GetView<EventController> {
                                                           .currentEvent
                                                           .title,
                                                       style: const TextStyle(
-                                                        fontSize: 36,
+                                                        fontSize: 26,
                                                         fontWeight:
                                                             FontWeight.bold,
                                                         color: Colors.white,
@@ -270,14 +281,14 @@ class EventDetailPage extends GetView<EventController> {
                                                                 .en
                                                                 .subtitle,
                                                       style: TextStyle(
-                                                        fontSize: 18,
+                                                        fontSize: 13,
                                                         color: Colors.white
                                                             .withOpacity(0.8),
                                                         fontWeight:
                                                             FontWeight.w500,
                                                       ),
                                                     ),
-                                                    const SizedBox(height: 24),
+                                                    const SizedBox(height: 10),
                                                     Text(
                                                       localeController
                                                               .isIndonesian
@@ -289,13 +300,13 @@ class EventDetailPage extends GetView<EventController> {
                                                                 .en
                                                                 .description,
                                                       style: TextStyle(
-                                                        fontSize: 16,
+                                                        fontSize: 10,
                                                         color: Colors.white
                                                             .withOpacity(0.9),
                                                         height: 1.6,
                                                       ),
                                                     ),
-                                                    const SizedBox(height: 30),
+                                                    const SizedBox(height: 10),
                                                     Material(
                                                       color: Colors.transparent,
                                                       child: InkWell(
@@ -306,10 +317,10 @@ class EventDetailPage extends GetView<EventController> {
                                                               12,
                                                             ),
                                                         child: Container(
+                                                          height: 35,
                                                           padding:
                                                               const EdgeInsets.symmetric(
-                                                                horizontal: 24,
-                                                                vertical: 14,
+                                                                horizontal: 18,
                                                               ),
                                                           decoration: BoxDecoration(
                                                             gradient: LinearGradient(
@@ -368,17 +379,21 @@ class EventDetailPage extends GetView<EventController> {
                                                         ),
                                                       ),
                                                     ),
-                                                    const SizedBox(height: 50),
+                                                    const SizedBox(height: 20),
                                                   ],
                                                 ),
                                               ),
                                             ),
 
-                                            const SizedBox(height: 30),
+                                            const SizedBox(height: 2),
 
                                             // Thumbnail navigation
                                             SizedBox(
-                                              height: 180,
+                                              height:
+                                                  MediaQuery.of(
+                                                    context,
+                                                  ).size.height *
+                                                  0.27,
                                               child: ListView.builder(
                                                 scrollDirection:
                                                     Axis.horizontal,

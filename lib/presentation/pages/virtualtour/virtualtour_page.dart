@@ -95,8 +95,8 @@ class _VirtualtourPageState extends State<VirtualtourPage>
 
                   // Tab Control Buttons
                   Container(
-                    width: 380, // Fixed width untuk TabBar
-                    height: 45,
+                    width: 250, // Fixed width untuk TabBar
+                    height: 30,
                     decoration: BoxDecoration(
                       color: themeController.isDarkMode
                           ? Colors.grey[850]
@@ -116,7 +116,7 @@ class _VirtualtourPageState extends State<VirtualtourPage>
                           ? Colors.white70
                           : Colors.black54,
                       labelStyle: const TextStyle(
-                        fontSize: 14,
+                        fontSize: 10,
                         fontWeight: FontWeight.bold,
                       ),
                       tabs: [
@@ -145,16 +145,28 @@ class _VirtualtourPageState extends State<VirtualtourPage>
           ],
         ),
 
+        // ✅ FAB YANG SUDAH DIKURANGI UKURANNYA
         floatingActionButton: Container(
-          margin: const EdgeInsets.only(top: 15, right: 650),
-          child: FloatingActionButton.extended(
-            onPressed: () => _showPanoramicView(),
-            backgroundColor: AppColors.primary,
-            label: Text(
-              "Jelajahi 360 Panoramic View",
-              style: TextStyle(color: Colors.white),
+          margin: const EdgeInsets.only(top: 15),
+          child: SizedBox(
+            height: 36, // ← Kurangi tinggi dari default (~48-56)
+            child: FloatingActionButton.extended(
+              onPressed: () => _showPanoramicView(),
+              backgroundColor: AppColors.primary,
+              elevation: 4, // ← Opsional: kurangi elevation juga
+              label: Text(
+                "Jelajahi 360 Panoramic View",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 12, // ← Kurangi ukuran font
+                ),
+              ),
+              icon: Icon(
+                Icons.threesixty_rounded,
+                color: Colors.white,
+                size: 20, // ← Kurangi ukuran icon
+              ),
             ),
-            icon: Icon(Icons.threesixty_rounded, color: Colors.white),
           ),
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerTop,
@@ -170,7 +182,7 @@ class _VirtualtourPageState extends State<VirtualtourPage>
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const SizedBox(height: 20),
+            const SizedBox(height: 10),
 
             // SECTION HARMONI
             _buildSectionHeader(
@@ -185,7 +197,7 @@ class _VirtualtourPageState extends State<VirtualtourPage>
               tahapFilter: '1',
             ),
 
-            const SizedBox(height: 40),
+            const SizedBox(height: 20),
 
             // SECTION FORESTA
             _buildSectionHeader(
@@ -289,7 +301,7 @@ class _VirtualtourPageState extends State<VirtualtourPage>
         Text(
           title,
           style: TextStyle(
-            fontSize: 32,
+            fontSize: 14,
             fontWeight: FontWeight.bold,
             color: themeController.isDarkMode ? Colors.white : Colors.black,
           ),
@@ -297,7 +309,7 @@ class _VirtualtourPageState extends State<VirtualtourPage>
         Container(
           margin: const EdgeInsets.only(left: 16),
           padding: const EdgeInsets.only(left: 16),
-          height: 45,
+          height: 25,
           alignment: Alignment.center,
           decoration: BoxDecoration(
             border: Border(
@@ -310,7 +322,7 @@ class _VirtualtourPageState extends State<VirtualtourPage>
           child: Text(
             subtitle,
             style: TextStyle(
-              fontSize: 18,
+              fontSize: 10,
               color: themeController.isDarkMode
                   ? Colors.white70
                   : Colors.black87,
@@ -343,8 +355,8 @@ class _VirtualtourPageState extends State<VirtualtourPage>
         children: filteredHouses.map((house) {
           // Faktor skala
           final double scaleFactor = useAspectRatio ? 1.5 : 1.0;
-          final double baseWidth = 181;
-          final double baseHeight = 242;
+          final double baseWidth = 80;
+          final double baseHeight = 110;
 
           return GestureDetector(
             onTap: () {
@@ -353,7 +365,7 @@ class _VirtualtourPageState extends State<VirtualtourPage>
             child: Container(
               width: baseWidth * scaleFactor,
               height: baseHeight * scaleFactor,
-              margin: const EdgeInsets.only(right: 16),
+              margin: const EdgeInsets.only(right: 8),
               child: _buildHouseCard(house),
             ),
           );

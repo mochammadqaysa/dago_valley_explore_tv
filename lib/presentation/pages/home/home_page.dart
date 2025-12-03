@@ -76,20 +76,19 @@ class HomePage extends GetView<SidebarController> {
           ),
           floatingActionButtonLocation: FloatingActionButtonLocation.endTop,
           floatingActionButton: Padding(
-            padding: const EdgeInsets.only(top: 8, right: 8),
+            padding: const EdgeInsets.only(top: 8, right: 0),
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
                 // Language Toggle Widget
                 const LanguageToggleWidget(),
 
-                const SizedBox(width: 12),
+                const SizedBox(width: 2),
 
                 // Theme Toggle Button
                 Obx(
-                  () => FloatingActionButton(
+                  () => FloatingActionButton.small(
                     heroTag: 'theme_btn',
-                    mini: true,
                     onPressed: () {
                       themeController.toggleTheme();
                     },

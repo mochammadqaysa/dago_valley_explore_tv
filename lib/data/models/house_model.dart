@@ -44,7 +44,7 @@ const List<HouseModel> houseModels = [
     isAddendum: false,
     blok: ["I3", "I5", "I7", "I8"],
     jumlahUnit: 4,
-    hargaCash: 2499000000,
+    hargaCash: 2900000000,
     gambar: [
       "assets/rumah/fasad_harmoni_100_108.png",
       // "assets/rumah/fasad_harmoni_100_108_kanopi.png",
@@ -140,7 +140,7 @@ const List<HouseModel> houseModels = [
     isAddendum: false,
     blok: ["G3", "G5", "G7"],
     jumlahUnit: 3,
-    hargaCash: 2670000000,
+    hargaCash: 3099000000,
     gambar: [
       "assets/rumah/fasad_harmoni_100_108.png",
       // "assets/rumah/fasad_harmoni_100_108_kanopi.png",
@@ -197,7 +197,7 @@ const List<HouseModel> houseModels = [
     isAddendum: false,
     blok: ["F3", "F5"],
     jumlahUnit: 2,
-    hargaCash: 2820000000,
+    hargaCash: 3273000000,
     gambar: [
       "assets/rumah/fasad_harmoni_100_108.png",
       // "assets/rumah/fasad_harmoni_100_108_kanopi.png",
@@ -255,7 +255,7 @@ const List<HouseModel> houseModels = [
     isAddendum: false,
     blok: ["H1", "H2", "H9", "H10", "I2", "I9", "I10"],
     jumlahUnit: 7,
-    hargaCash: 3333000000,
+    hargaCash: 3868000000,
     gambar: [
       "assets/rumah/fasad_harmoni_129_144.png",
       // "assets/rumah/fasad_harmoni_129_144_kanopi.png",
@@ -345,7 +345,7 @@ const List<HouseModel> houseModels = [
     isAddendum: false,
     blok: ["G1", "G9"],
     jumlahUnit: 2,
-    hargaCash: 3443000000,
+    hargaCash: 3996000000,
     gambar: [
       "assets/rumah/fasad_harmoni_131_150.png",
       "assets/rumah/fasad_harmoni_131_150_siang.png",
@@ -444,7 +444,7 @@ const List<HouseModel> houseModels = [
     isAddendum: false,
     blok: ["E3", "E5"],
     jumlahUnit: 2,
-    hargaCash: 4351000000,
+    hargaCash: 5050000000,
     gambar: [
       "assets/rumah/fasad_foresta_144_190.png",
       "assets/rumah/fasad_foresta_144_190_kanopi.png",
@@ -485,7 +485,7 @@ const List<HouseModel> houseModels = [
   //   isAddendum: false,
   //   blok: ["F6", "F8"],
   //   jumlahUnit: 2,
-  //   hargaCash: 4799000000,
+  //   hargaCash: 5569000000,
   //   galeri: {
   //     "image": {
   //       //gaada asetnya, pakai yang 144/190
@@ -525,7 +525,7 @@ const List<HouseModel> houseModels = [
     isAddendum: false,
     blok: ["F4"],
     jumlahUnit: 1,
-    hargaCash: 4957000000,
+    hargaCash: 5753000000,
     gambar: [
       "assets/rumah/fasad_foresta_144_228.png",
       // "assets/rumah/fasad_foresta_193_228_kanopi.png",
@@ -564,7 +564,7 @@ const List<HouseModel> houseModels = [
     isAddendum: false,
     blok: ["E1", "E7"],
     jumlahUnit: 2,
-    hargaCash: 5311000000,
+    hargaCash: 6164000000,
     gambar: [
       "assets/rumah/fasad_foresta_193_228.png",
       // "assets/rumah/fasad_foresta_193_228_kanopi.png",
@@ -650,7 +650,7 @@ const List<HouseModel> houseModels = [
     isAddendum: false,
     blok: ["F2"],
     jumlahUnit: 1,
-    hargaCash: 5422000000,
+    hargaCash: 6292000000,
     gambar: [
       //gaada asetnya, pakai yang 193/228
       "assets/rumah/fasad_foresta_193_228.png",

@@ -84,12 +84,15 @@ class _DashboardPageState extends State<DashboardPage> {
         body: SafeArea(
           child: SingleChildScrollView(
             child: Padding(
-              padding: const EdgeInsets.all(24.0),
+              padding: const EdgeInsets.symmetric(
+                vertical: 24.0,
+                horizontal: 16,
+              ),
               child: Column(
                 children: [
                   Container(
                     // height: 400,
-                    height: MediaQuery.of(context).size.height * 0.37,
+                    height: MediaQuery.of(context).size.height * 0.35,
                     width: double.infinity,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.all(Radius.circular(10)),
@@ -115,28 +118,33 @@ class _DashboardPageState extends State<DashboardPage> {
                               Text(
                                 "welcome_title".tr,
                                 style: TextStyle(
-                                  fontSize: 40,
+                                  fontSize: 20,
                                   fontWeight: FontWeight.bold,
                                   color: AppColors.white,
                                 ),
                                 textAlign: TextAlign.center,
                               ),
                               SizedBox(height: 8),
-                              Text(
-                                localeController.isEnglish
-                                    ? _storage.housings?.welcomeTextEn ??
-                                          "welcome_desc"
-                                    : _storage.housings?.welcomeText ??
-                                          "welcome_desc",
-                                style: TextStyle(
-                                  color: AppColors.white,
-                                  fontSize: 16,
+                              Container(
+                                width: MediaQuery.of(context).size.width * 0.6,
+                                child: Text(
+                                  localeController.isEnglish
+                                      ? _storage.housings?.welcomeTextEn ??
+                                            "welcome_desc"
+                                      : _storage.housings?.welcomeText ??
+                                            "welcome_desc",
+                                  style: TextStyle(
+                                    color: AppColors.white,
+                                    fontSize: 12,
+                                  ),
+                                  textAlign: TextAlign.center,
                                 ),
-                                textAlign: TextAlign.center,
                               ),
                               SizedBox(height: 8),
                               LiquidGlassButton(
-                                width: 200,
+                                width: 160,
+                                height: 35,
+                                fontSize: 14,
                                 borderRadius: 30,
                                 text: 'view_promo'.tr,
                                 onPressed: _showPromoModal,
@@ -151,7 +159,7 @@ class _DashboardPageState extends State<DashboardPage> {
 
                   // Ganti dengan Row + MainAxisAlignment.spaceBetween
                   Container(
-                    height: MediaQuery.of(context).size.height * 0.475,
+                    height: MediaQuery.of(context).size.height * 0.42,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -223,9 +231,9 @@ class _DashboardPageState extends State<DashboardPage> {
                   LiquidGlassContainer(
                     glassColor: Colors.black,
                     glassAccentColor: Colors.black,
-                    height: 90,
+                    height: 50,
                     width: double.infinity,
-                    borderRadius: 17,
+                    borderRadius: 13,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -237,18 +245,18 @@ class _DashboardPageState extends State<DashboardPage> {
                             ),
                             child: Row(
                               children: [
-                                // WhatsApp
-                                SvgPicture.asset(
-                                  "assets/whatsapp.svg",
-                                  color: Colors.white,
-                                  height: 20,
-                                ),
-                                SizedBox(width: 8),
-                                Text(
-                                  "+6289765345729",
-                                  style: TextStyle(color: Colors.white),
-                                ),
-                                SizedBox(width: 20),
+                                // // WhatsApp
+                                // SvgPicture.asset(
+                                //   "assets/whatsapp.svg",
+                                //   color: Colors.white,
+                                //   height: 20,
+                                // ),
+                                // SizedBox(width: 8),
+                                // Text(
+                                //   "+6289765345729",
+                                //   style: TextStyle(color: Colors.white),
+                                // ),
+                                // SizedBox(width: 20),
 
                                 // Website
                                 SvgPicture.asset(
@@ -259,7 +267,10 @@ class _DashboardPageState extends State<DashboardPage> {
                                 SizedBox(width: 8),
                                 Text(
                                   "dagovalleybandung.com",
-                                  style: TextStyle(color: Colors.white),
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 12,
+                                  ),
                                 ),
                                 SizedBox(width: 20),
 
@@ -272,7 +283,10 @@ class _DashboardPageState extends State<DashboardPage> {
                                 SizedBox(width: 8),
                                 Text(
                                   "@dagovalleybandung",
-                                  style: TextStyle(color: Colors.white),
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 12,
+                                  ),
                                 ),
                               ],
                             ),
@@ -286,7 +300,7 @@ class _DashboardPageState extends State<DashboardPage> {
                             vertical: 6,
                           ),
                           child: LiquidGlassButton(
-                            borderRadius: 16,
+                            borderRadius: 8,
                             text: 'rate_us'.tr,
                             icon: Icons.qr_code_2,
                             glassColor: Colors.grey.withOpacity(0.3),

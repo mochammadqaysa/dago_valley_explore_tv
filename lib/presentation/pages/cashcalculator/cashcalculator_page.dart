@@ -1,6 +1,7 @@
 import 'package:dago_valley_explore_tv/app/config/app_colors.dart';
 import 'package:dago_valley_explore_tv/app/extensions/color.dart';
 import 'package:dago_valley_explore_tv/app/services/local_storage.dart';
+import 'package:dago_valley_explore_tv/app/util/keyboard.dart';
 import 'package:dago_valley_explore_tv/data/models/house_model.dart';
 import 'package:dago_valley_explore_tv/presentation/controllers/cashcalculator/cashcalculator_controller.dart';
 import 'package:dago_valley_explore_tv/presentation/controllers/theme/theme_controller.dart';
@@ -20,18 +21,25 @@ class _CashcalculatorPageState extends State<CashcalculatorPage> {
   PaymentMethod paymentMethod = PaymentMethod.kprSyariah;
   final TextEditingController _diskonRpController = TextEditingController();
   final TextEditingController _diskonPersenController = TextEditingController();
+  final TextEditingController _dpController = TextEditingController();
+
+  final FocusNode _diskonRpFocus = FocusNode();
+  final FocusNode _diskonPersenFocus = FocusNode();
+  final FocusNode _dpFocus = FocusNode();
+
   bool tanpaDp = false;
   double? diskonNominal;
   double? diskonPersen;
+  double? customDp;
   int tenor = 5;
-  double marginPersen = 11.0; // Default untuk KPR Syariah
+  double marginPersen = 11.0;
   double marginSyariah = 0.0;
   double marginDeveloper = 0.0;
 
+  TextEditingController? _activeController;
+
   final controller = CashcalculatorController();
-
-  final rupiahFormat = NumberFormat("#,###", "id_ID");
-
+  final currencyFormatter = NumberFormat("#,##0", "id_ID");
   final LocalStorageService _storage = Get.find<LocalStorageService>();
 
   List<int> get tenorOptions {
@@ -50,10 +58,161 @@ class _CashcalculatorPageState extends State<CashcalculatorPage> {
     marginSyariah = cachedKpr?.first.marginBankSyariahValue ?? 11.0;
     marginDeveloper = cachedKpr?.first.marginDeveloperValue ?? 5.25;
 
-    // Set default margin berdasarkan metode pembayaran
     marginPersen = paymentMethod == PaymentMethod.kprSyariah
         ? marginSyariah
         : marginDeveloper;
+  }
+
+  @override
+  void dispose() {
+    _diskonRpController.dispose();
+    _diskonPersenController.dispose();
+    _dpController.dispose();
+    _diskonRpFocus.dispose();
+    _diskonPersenFocus.dispose();
+    _dpFocus.dispose();
+    super.dispose();
+  }
+
+  // ✅ Show keyboard dengan custom TvOnscreenKeyboard
+  void _showKeyboard(
+    TextEditingController controller, {
+    bool allowDecimal = false,
+  }) {
+    setState(() => _activeController = controller);
+
+    final themeController = Get.find<ThemeController>();
+
+    context.showTvKeyboard(
+      isDarkMode: themeController.isDarkMode,
+      allowDecimal: allowDecimal,
+      onKeyPressed: (value) => _handleKeyPress(value),
+      onBackspace: () => _handleBackspace(),
+    );
+  }
+
+  // ✅ Handle key press
+  void _handleKeyPress(String value) {
+    if (_activeController == null) return;
+
+    final currentText = _activeController!.text
+        .replaceAll('. ', '')
+        .replaceAll(',', '')
+        .trim();
+
+    String newText;
+
+    if (value == '.') {
+      // Decimal point - only for percentage field
+      if (_activeController == _diskonPersenController) {
+        if (!currentText.contains('.')) {
+          newText = currentText.isEmpty ? '0.' : currentText + '.';
+        } else {
+          return;
+        }
+      } else {
+        return; // Don't allow decimal for rupiah fields
+      }
+    } else {
+      // Number keys
+      if (currentText == '0' && value == '0') return;
+      if (currentText == '0' && value != '. ') {
+        newText = value;
+      } else {
+        newText = currentText + value;
+      }
+    }
+
+    // Update fields
+    if (_activeController == _dpController) {
+      _updateDpField(newText);
+    } else if (_activeController == _diskonRpController) {
+      _updateDiskonRpField(newText);
+    } else if (_activeController == _diskonPersenController) {
+      _updateDiskonPersenField(newText);
+    }
+  }
+
+  // ✅ Handle backspace
+  void _handleBackspace() {
+    if (_activeController == null) return;
+
+    final currentText = _activeController!.text
+        .replaceAll('.', '')
+        .replaceAll(',', '')
+        .trim();
+
+    if (currentText.isEmpty) return;
+
+    String newText = currentText.substring(0, currentText.length - 1);
+
+    // Update fields
+    if (_activeController == _dpController) {
+      _updateDpField(newText);
+    } else if (_activeController == _diskonRpController) {
+      _updateDiskonRpField(newText);
+    } else if (_activeController == _diskonPersenController) {
+      _updateDiskonPersenField(newText);
+    }
+  }
+
+  void _updateDpField(String value) {
+    if (value.isEmpty) {
+      setState(() => customDp = null);
+      _dpController.clear();
+      return;
+    }
+
+    double? val = double.tryParse(value);
+    if (val != null && val >= 0) {
+      setState(() => customDp = val);
+      String formattedText = currencyFormatter.format(val.toInt());
+      _dpController.value = TextEditingValue(
+        text: formattedText,
+        selection: TextSelection.collapsed(offset: formattedText.length),
+      );
+    }
+  }
+
+  void _updateDiskonRpField(String value) {
+    if (value.isEmpty) {
+      setState(() => diskonNominal = null);
+      _diskonRpController.clear();
+      return;
+    }
+
+    double? val = double.tryParse(value);
+    if (val != null && val >= 0) {
+      setState(() {
+        diskonNominal = val;
+        diskonPersen = null;
+      });
+      String formattedText = currencyFormatter.format(val.toInt());
+      _diskonRpController.value = TextEditingValue(
+        text: formattedText,
+        selection: TextSelection.collapsed(offset: formattedText.length),
+      );
+    }
+  }
+
+  void _updateDiskonPersenField(String value) {
+    if (value.isEmpty) {
+      setState(() => diskonPersen = null);
+      _diskonPersenController.clear();
+      return;
+    }
+
+    double? val = double.tryParse(value);
+    if (val != null && val >= 0 && val <= 100) {
+      setState(() {
+        diskonPersen = val;
+        diskonNominal = null;
+      });
+      _diskonPersenController.value = TextEditingValue(
+        text: value,
+        selection: TextSelection.collapsed(offset: value.length),
+      );
+    }
   }
 
   @override
@@ -69,12 +228,9 @@ class _CashcalculatorPageState extends State<CashcalculatorPage> {
             diskonPersen: diskonPersen,
             tenorYears: tenor,
             marginPersen: marginPersen,
+            customDp: customDp,
           )
         : null;
-
-    print(
-      '💾 Cached KPR Calculators for margins: Syariah: $marginSyariah, Developer: $marginDeveloper',
-    );
 
     return Obx(() {
       final cardColor = themeController.isDarkMode
@@ -84,6 +240,7 @@ class _CashcalculatorPageState extends State<CashcalculatorPage> {
       final textColor = themeController.isDarkMode
           ? Colors.white
           : Colors.black;
+
       return Scaffold(
         body: SafeArea(
           child: Row(
@@ -91,7 +248,7 @@ class _CashcalculatorPageState extends State<CashcalculatorPage> {
             children: [
               // Kalkulator - 60%
               Expanded(
-                flex: 5,
+                flex: 6,
                 child: Padding(
                   padding: const EdgeInsets.symmetric(
                     vertical: 32.0,
@@ -115,7 +272,7 @@ class _CashcalculatorPageState extends State<CashcalculatorPage> {
                                 Text(
                                   'mortgage_simulation'.tr,
                                   style: TextStyle(
-                                    fontSize: 32,
+                                    fontSize: 14,
                                     color: textColor,
                                     fontWeight: FontWeight.bold,
                                   ),
@@ -123,16 +280,16 @@ class _CashcalculatorPageState extends State<CashcalculatorPage> {
                                 Text(
                                   'mortgage_simulation_desc'.tr,
                                   style: TextStyle(
-                                    fontSize: 14,
+                                    fontSize: 9,
                                     color: textColor,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
-                                const SizedBox(height: 24),
+                                const SizedBox(height: 5),
                                 Text(
                                   'model_and_type'.tr,
                                   style: TextStyle(
-                                    fontSize: 16,
+                                    fontSize: 12,
                                     fontWeight: FontWeight.bold,
                                     color: textColor,
                                   ),
@@ -143,6 +300,7 @@ class _CashcalculatorPageState extends State<CashcalculatorPage> {
                                     horizontal: 12,
                                     vertical: 4,
                                   ),
+                                  height: 35,
                                   decoration: BoxDecoration(
                                     border: Border.all(color: Colors.grey),
                                     borderRadius: BorderRadius.circular(4),
@@ -152,7 +310,10 @@ class _CashcalculatorPageState extends State<CashcalculatorPage> {
                                     value: selectedModel,
                                     hint: Text(
                                       'choose_house_model'.tr,
-                                      style: TextStyle(color: Colors.grey),
+                                      style: TextStyle(
+                                        color: Colors.grey,
+                                        fontSize: 10,
+                                      ),
                                     ),
                                     dropdownColor: cardColor,
                                     focusColor: cardColor,
@@ -161,22 +322,31 @@ class _CashcalculatorPageState extends State<CashcalculatorPage> {
                                       return DropdownMenuItem(
                                         value: m,
                                         child: Text(
-                                          '${m.displayName} - Rp. ${_formatCurrency(m.hargaCash.round())}',
-                                          style: TextStyle(color: textColor),
+                                          '${m.displayName} - Rp.   ${_formatCurrencyDisplay(m.hargaCash.round())}',
+                                          style: TextStyle(
+                                            color: textColor,
+                                            fontSize: 10,
+                                          ),
                                         ),
                                       );
                                     }).toList(),
-                                    onChanged: (v) =>
-                                        setState(() => selectedModel = v),
+                                    onChanged: (v) {
+                                      setState(() {
+                                        selectedModel = v;
+                                        customDp = null;
+                                        _dpController.clear();
+                                      });
+                                    },
                                   ),
                                 ),
-                                const SizedBox(height: 16),
+                                const SizedBox(height: 5),
 
                                 Text(
                                   'payment_method'.tr,
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                     color: textColor,
+                                    fontSize: 12,
                                   ),
                                 ),
                                 Row(
@@ -185,7 +355,10 @@ class _CashcalculatorPageState extends State<CashcalculatorPage> {
                                       child: RadioListTile<PaymentMethod>(
                                         title: Text(
                                           'sharia_bank_mortgage'.tr,
-                                          style: TextStyle(color: textColor),
+                                          style: TextStyle(
+                                            color: textColor,
+                                            fontSize: 10,
+                                          ),
                                         ),
                                         value: PaymentMethod.kprSyariah,
                                         groupValue: paymentMethod,
@@ -195,6 +368,8 @@ class _CashcalculatorPageState extends State<CashcalculatorPage> {
                                             tanpaDp = false;
                                             tenor = 5;
                                             marginPersen = marginSyariah;
+                                            customDp = null;
+                                            _dpController.clear();
                                           });
                                         },
                                       ),
@@ -203,7 +378,10 @@ class _CashcalculatorPageState extends State<CashcalculatorPage> {
                                       child: RadioListTile<PaymentMethod>(
                                         title: Text(
                                           'developer_mortgage'.tr,
-                                          style: TextStyle(color: textColor),
+                                          style: TextStyle(
+                                            color: textColor,
+                                            fontSize: 10,
+                                          ),
                                         ),
                                         value: PaymentMethod.developer,
                                         groupValue: paymentMethod,
@@ -212,6 +390,8 @@ class _CashcalculatorPageState extends State<CashcalculatorPage> {
                                             paymentMethod = v!;
                                             tenor = 4;
                                             marginPersen = marginDeveloper;
+                                            customDp = null;
+                                            _dpController.clear();
                                           });
                                         },
                                       ),
@@ -223,9 +403,10 @@ class _CashcalculatorPageState extends State<CashcalculatorPage> {
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                     color: textColor,
+                                    fontSize: 12,
                                   ),
                                 ),
-                                const SizedBox(height: 16),
+                                const SizedBox(height: 5),
 
                                 Slider(
                                   value: tenor.toDouble(),
@@ -242,29 +423,43 @@ class _CashcalculatorPageState extends State<CashcalculatorPage> {
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       color: textColor,
+                                      fontSize: 12,
                                     ),
                                   ),
                                 ),
 
-                                const SizedBox(height: 16),
                                 if (paymentMethod == PaymentMethod.developer)
-                                  Row(
-                                    children: [
-                                      Text(
-                                        'no_down_payment'.tr,
-                                        style: TextStyle(color: textColor),
-                                      ),
-                                      const SizedBox(width: 10),
-                                      Switch(
-                                        value: tanpaDp,
-                                        onChanged: (v) =>
-                                            setState(() => tanpaDp = v),
-                                      ),
-                                    ],
+                                  SizedBox(
+                                    height: 35,
+                                    child: Row(
+                                      children: [
+                                        Text(
+                                          'no_down_payment'.tr,
+                                          style: TextStyle(
+                                            color: textColor,
+                                            fontSize: 12,
+                                          ),
+                                        ),
+                                        const SizedBox(width: 10),
+                                        Transform.scale(
+                                          scale: 0.8,
+                                          child: Switch(
+                                            value: tanpaDp,
+                                            materialTapTargetSize:
+                                                MaterialTapTargetSize
+                                                    .shrinkWrap,
+                                            onChanged: (v) {
+                                              setState(() {
+                                                tanpaDp = v;
+                                                customDp = null;
+                                                _dpController.clear();
+                                              });
+                                            },
+                                          ),
+                                        ),
+                                      ],
+                                    ),
                                   ),
-
-                                const SizedBox(height: 16),
-
                                 Row(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
@@ -280,29 +475,93 @@ class _CashcalculatorPageState extends State<CashcalculatorPage> {
                                             style: TextStyle(
                                               fontWeight: FontWeight.bold,
                                               color: textColor,
+                                              fontSize: 12,
                                             ),
                                           ),
                                           const SizedBox(height: 8),
-                                          Container(
-                                            width: double
-                                                .infinity, // <-- biar ikut lebar Expanded
-                                            padding: const EdgeInsets.all(12),
-                                            decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(4),
-                                              color: themeController.isDarkMode
-                                                  ? Colors.grey[800]
-                                                  : Colors.grey[200],
-                                            ),
-                                            child: Text(
-                                              selectedModel == null
-                                                  ? 'choose_house_model_first'
-                                                        .tr
-                                                  : 'Rp ${_formatCurrency(controller.calculateDp(harga: selectedModel!.hargaCash.toDouble(), method: paymentMethod, tanpaDp: tanpaDp).round())}',
-                                              style: TextStyle(
-                                                fontSize: 16,
-                                                color: textColor,
+                                          SizedBox(
+                                            height: 35,
+                                            child: TextField(
+                                              controller: _dpController,
+                                              focusNode: _dpFocus,
+                                              readOnly: true,
+                                              enabled: selectedModel != null,
+                                              decoration: InputDecoration(
+                                                hintText: selectedModel == null
+                                                    ? 'choose_house_model_first'
+                                                          .tr
+                                                    : 'Rp ${_formatCurrencyDisplay(controller.calculateDp(harga: selectedModel!.hargaCash.toDouble(), method: paymentMethod, tanpaDp: tanpaDp).round())}',
+                                                hintStyle: TextStyle(
+                                                  color:
+                                                      themeController.isDarkMode
+                                                      ? Colors.grey[600]
+                                                      : Colors.grey[500],
+                                                  fontSize: 10,
+                                                ),
+                                                prefixText: 'Rp ',
+                                                prefixStyle: TextStyle(
+                                                  color: textColor,
+                                                  fontSize: 10,
+                                                ),
+                                                border: OutlineInputBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(4),
+                                                ),
+                                                filled: true,
+                                                fillColor: customDp != null
+                                                    ? (themeController
+                                                              .isDarkMode
+                                                          ? Colors.blue[900]
+                                                                ?.withOpacity(
+                                                                  0.3,
+                                                                )
+                                                          : Colors.blue[50])
+                                                    : (themeController
+                                                              .isDarkMode
+                                                          ? Colors.grey[800]
+                                                          : Colors.grey[200]),
+                                                contentPadding:
+                                                    EdgeInsets.symmetric(
+                                                      horizontal: 12,
+                                                      vertical: 8,
+                                                    ),
+                                                isDense: true,
+                                                suffixIcon: customDp != null
+                                                    ? IconButton(
+                                                        iconSize: 18,
+                                                        padding:
+                                                            EdgeInsets.zero,
+                                                        constraints:
+                                                            BoxConstraints(),
+                                                        icon: Icon(
+                                                          Icons.close,
+                                                          color: textColor,
+                                                        ),
+                                                        onPressed: () {
+                                                          setState(() {
+                                                            customDp = null;
+                                                            _dpController
+                                                                .clear();
+                                                          });
+                                                        },
+                                                        tooltip:
+                                                            'Reset ke default',
+                                                      )
+                                                    : null,
                                               ),
+                                              style: TextStyle(
+                                                fontSize: 10,
+                                                color: textColor,
+                                                fontWeight: customDp != null
+                                                    ? FontWeight.bold
+                                                    : FontWeight.normal,
+                                              ),
+                                              // ✅ Show keyboard saat tap
+                                              onTap: () {
+                                                if (selectedModel != null) {
+                                                  _showKeyboard(_dpController);
+                                                }
+                                              },
                                             ),
                                           ),
                                         ],
@@ -311,108 +570,20 @@ class _CashcalculatorPageState extends State<CashcalculatorPage> {
 
                                     const SizedBox(width: 12),
 
-                                    // === Kolom Margin (%) ===
+                                    // Hidden fields
                                     Expanded(
                                       flex: 1,
                                       child: Offstage(
                                         offstage: true,
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              'Margin (%)',
-                                              style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                color: textColor,
-                                              ),
-                                            ),
-                                            const SizedBox(height: 8),
-                                            SizedBox(
-                                              width: double.infinity,
-                                              child: TextField(
-                                                decoration: InputDecoration(
-                                                  border: OutlineInputBorder(),
-                                                  hintText: 'Margin %',
-                                                  contentPadding:
-                                                      EdgeInsets.symmetric(
-                                                        horizontal: 12,
-                                                        vertical: 12,
-                                                      ),
-                                                ),
-                                                keyboardType:
-                                                    TextInputType.numberWithOptions(
-                                                      decimal: true,
-                                                    ),
-                                                style: TextStyle(
-                                                  color: textColor,
-                                                ),
-                                                controller:
-                                                    TextEditingController(
-                                                      text: marginPersen
-                                                          .toString(),
-                                                    ),
-                                                onChanged: (v) {
-                                                  double? val = double.tryParse(
-                                                    v,
-                                                  );
-                                                  if (val != null) {
-                                                    setState(
-                                                      () => marginPersen = val,
-                                                    );
-                                                  }
-                                                },
-                                              ),
-                                            ),
-                                          ],
-                                        ),
+                                        child: SizedBox(),
                                       ),
                                     ),
-
                                     const SizedBox(width: 12),
-
-                                    // === Kolom Margin KPR  ===
                                     Expanded(
                                       flex: 1,
                                       child: Offstage(
                                         offstage: true,
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              'mortgage_margin'.tr,
-                                              style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                color: textColor,
-                                              ),
-                                            ),
-                                            const SizedBox(height: 8),
-                                            Container(
-                                              width: double.infinity,
-                                              padding: const EdgeInsets.all(12),
-                                              decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(4),
-                                                color:
-                                                    themeController.isDarkMode
-                                                    ? Colors.grey[800]
-                                                    : Colors.grey[200],
-                                              ),
-                                              child: Text(
-                                                selectedModel == null ||
-                                                        result == null
-                                                    ? 'choose_house_model_first'
-                                                          .tr
-                                                    : 'Rp ${_formatCurrency(result.marginKpr.round())}',
-                                                style: TextStyle(
-                                                  fontSize: 16,
-                                                  color: textColor,
-                                                ),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
+                                        child: SizedBox(),
                                       ),
                                     ),
                                   ],
@@ -424,121 +595,116 @@ class _CashcalculatorPageState extends State<CashcalculatorPage> {
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                     color: textColor,
+                                    fontSize: 12,
                                   ),
                                 ),
                                 const SizedBox(height: 8),
                                 Row(
                                   children: [
                                     Expanded(
-                                      child: Stack(
-                                        alignment: Alignment.centerRight,
-                                        children: [
-                                          TextField(
-                                            controller: _diskonRpController,
-                                            enabled: diskonPersen == null,
-                                            decoration: InputDecoration(
-                                              labelText:
-                                                  '${'discount'.tr} (Rp)',
-                                              border:
-                                                  const OutlineInputBorder(),
-                                              suffixIcon: diskonNominal != null
-                                                  ? IconButton(
-                                                      icon: const Icon(
-                                                        Icons.close,
-                                                      ),
-                                                      onPressed: () {
-                                                        _diskonRpController
-                                                            .clear();
-                                                        setState(() {
-                                                          diskonNominal = null;
-                                                        });
-                                                      },
-                                                    )
-                                                  : null,
-                                            ),
-                                            keyboardType: TextInputType.number,
-                                            style: TextStyle(
-                                              color: themeController.isDarkMode
-                                                  ? Colors.grey
-                                                  : Colors.black,
-                                            ),
-                                            onChanged: (v) {
-                                              String cleaned = v.replaceAll(
-                                                '.',
-                                                '',
-                                              );
-                                              double? val = double.tryParse(
-                                                cleaned,
-                                              );
-                                              if (val != null) {
-                                                setState(() {
-                                                  diskonNominal = val;
-                                                  diskonPersen = null;
-                                                });
-                                                _diskonRpController
-                                                    .value = TextEditingValue(
-                                                  text: rupiahFormat.format(
-                                                    val,
-                                                  ),
-                                                  selection:
-                                                      TextSelection.collapsed(
-                                                        offset: rupiahFormat
-                                                            .format(val)
-                                                            .length,
-                                                      ),
-                                                );
-                                              } else if (v.isEmpty) {
-                                                setState(
-                                                  () => diskonNominal = null,
-                                                );
-                                              }
-                                            },
+                                      child: SizedBox(
+                                        height: 35,
+                                        child: TextField(
+                                          controller: _diskonRpController,
+                                          focusNode: _diskonRpFocus,
+                                          readOnly: true,
+                                          enabled: diskonPersen == null,
+                                          decoration: InputDecoration(
+                                            labelText: '${'discount'.tr} (Rp)',
+                                            labelStyle: TextStyle(fontSize: 10),
+                                            border: const OutlineInputBorder(),
+                                            contentPadding:
+                                                EdgeInsets.symmetric(
+                                                  horizontal: 12,
+                                                  vertical: 8,
+                                                ),
+                                            isDense: true,
+                                            suffixIcon: diskonNominal != null
+                                                ? IconButton(
+                                                    iconSize: 18,
+                                                    padding: EdgeInsets.zero,
+                                                    constraints:
+                                                        BoxConstraints(),
+                                                    icon: const Icon(
+                                                      Icons.close,
+                                                    ),
+                                                    onPressed: () {
+                                                      _diskonRpController
+                                                          .clear();
+                                                      setState(() {
+                                                        diskonNominal = null;
+                                                      });
+                                                    },
+                                                  )
+                                                : null,
                                           ),
-                                        ],
+                                          style: TextStyle(
+                                            color: themeController.isDarkMode
+                                                ? Colors.grey
+                                                : Colors.black,
+                                            fontSize: 10,
+                                          ),
+                                          // ✅ Show keyboard saat tap
+                                          onTap: diskonPersen == null
+                                              ? () => _showKeyboard(
+                                                  _diskonRpController,
+                                                )
+                                              : null,
+                                        ),
                                       ),
                                     ),
                                     const SizedBox(width: 12),
                                     Expanded(
-                                      child: Stack(
-                                        alignment: Alignment.centerRight,
-                                        children: [
-                                          TextField(
-                                            controller: _diskonPersenController,
-                                            enabled: diskonNominal == null,
-                                            decoration: InputDecoration(
-                                              labelText: '${'discount'.tr} (%)',
-                                              border:
-                                                  const OutlineInputBorder(),
-                                              suffixIcon: diskonPersen != null
-                                                  ? IconButton(
-                                                      icon: const Icon(
-                                                        Icons.close,
-                                                      ),
-                                                      onPressed: () {
-                                                        _diskonPersenController
-                                                            .clear();
-                                                        setState(() {
-                                                          diskonPersen = null;
-                                                        });
-                                                      },
-                                                    )
-                                                  : null,
-                                            ),
-                                            keyboardType: TextInputType.number,
-                                            style: TextStyle(
-                                              color: themeController.isDarkMode
-                                                  ? Colors.grey
-                                                  : Colors.black,
-                                            ),
-                                            onChanged: (v) => setState(() {
-                                              diskonPersen = (v.trim().isEmpty)
-                                                  ? null
-                                                  : double.tryParse(v.trim());
-                                              if (diskonPersen != null)
-                                                diskonNominal = null;
-                                            }),
+                                      child: SizedBox(
+                                        height: 35,
+                                        child: TextField(
+                                          controller: _diskonPersenController,
+                                          focusNode: _diskonPersenFocus,
+                                          readOnly: true,
+                                          enabled: diskonNominal == null,
+                                          decoration: InputDecoration(
+                                            labelText: '${'discount'.tr} (%)',
+                                            labelStyle: TextStyle(fontSize: 10),
+                                            border: const OutlineInputBorder(),
+                                            contentPadding:
+                                                EdgeInsets.symmetric(
+                                                  horizontal: 12,
+                                                  vertical: 8,
+                                                ),
+                                            isDense: true,
+                                            suffixIcon: diskonPersen != null
+                                                ? IconButton(
+                                                    iconSize: 18,
+                                                    padding: EdgeInsets.zero,
+                                                    constraints:
+                                                        BoxConstraints(),
+                                                    icon: const Icon(
+                                                      Icons.close,
+                                                    ),
+                                                    onPressed: () {
+                                                      _diskonPersenController
+                                                          .clear();
+                                                      setState(() {
+                                                        diskonPersen = null;
+                                                      });
+                                                    },
+                                                  )
+                                                : null,
                                           ),
-                                        ],
+                                          style: TextStyle(
+                                            color: themeController.isDarkMode
+                                                ? Colors.grey
+                                                : Colors.black,
+                                            fontSize: 10,
+                                          ),
+                                          // ✅ Show keyboard dengan decimal support
+                                          onTap: diskonNominal == null
+                                              ? () => _showKeyboard(
+                                                  _diskonPersenController,
+                                                  allowDecimal: true,
+                                                )
+                                              : null,
+                                        ),
                                       ),
                                     ),
                                   ],
@@ -570,14 +736,14 @@ class _CashcalculatorPageState extends State<CashcalculatorPage> {
                                       Text(
                                         'Angsuran / Bulan',
                                         style: TextStyle(
-                                          fontSize: 18,
+                                          fontSize: 12,
                                           color: textColor,
                                         ),
                                       ),
                                       Text(
-                                        'Rp ${(diskonNominal != null || diskonPersen != null) ? _formatCurrency(result.cicilanBulananSetelahDiskon.round()) : _formatCurrency(result.cicilanBulanan.round())}',
+                                        'Rp ${(diskonNominal != null || diskonPersen != null) ? _formatCurrencyDisplay(result.cicilanBulananSetelahDiskon.round()) : _formatCurrencyDisplay(result.cicilanBulanan.round())}',
                                         style: TextStyle(
-                                          fontSize: 32,
+                                          fontSize: 18,
                                           fontWeight: FontWeight.bold,
                                           color: textColor,
                                         ),
@@ -588,9 +754,9 @@ class _CashcalculatorPageState extends State<CashcalculatorPage> {
                                         Column(
                                           children: [
                                             Text(
-                                              'Rp ${_formatCurrency(result.totalPembayaran.round())}',
+                                              'Rp ${_formatCurrencyDisplay(result.totalPembayaran.round())}',
                                               style: TextStyle(
-                                                fontSize: 16,
+                                                fontSize: 10,
                                                 decoration:
                                                     TextDecoration.lineThrough,
                                                 decorationColor: Colors.red,
@@ -599,9 +765,9 @@ class _CashcalculatorPageState extends State<CashcalculatorPage> {
                                               ),
                                             ),
                                             Text(
-                                              'Rp ${_formatCurrency(result.hargaSetelahDiskon.round())}',
+                                              'Rp ${_formatCurrencyDisplay(result.hargaSetelahDiskon.round())}',
                                               style: TextStyle(
-                                                fontSize: 16,
+                                                fontSize: 10,
                                                 fontWeight: FontWeight.bold,
                                                 color: Colors.green,
                                               ),
@@ -610,9 +776,9 @@ class _CashcalculatorPageState extends State<CashcalculatorPage> {
                                         )
                                       else
                                         Text(
-                                          'Rp ${_formatCurrency(result.totalPembayaran.round())}',
+                                          'Rp ${_formatCurrencyDisplay(result.totalPembayaran.round())}',
                                           style: TextStyle(
-                                            fontSize: 16,
+                                            fontSize: 10,
                                             color: textColor,
                                           ),
                                         ),
@@ -628,9 +794,9 @@ class _CashcalculatorPageState extends State<CashcalculatorPage> {
                 ),
               ),
 
-              // Panel Kanan - Tabel Angsuran
+              // Panel Kanan - Tabel Angsuran (unchanged)
               Expanded(
-                flex: 6,
+                flex: 4,
                 child: Padding(
                   padding: const EdgeInsets.symmetric(
                     vertical: 32.0,
@@ -663,6 +829,7 @@ class _CashcalculatorPageState extends State<CashcalculatorPage> {
                             Expanded(
                               child: TabBarView(
                                 children: [
+                                  // Summary tab (unchanged)
                                   SingleChildScrollView(
                                     padding: const EdgeInsets.all(12),
                                     child: Column(
@@ -672,7 +839,7 @@ class _CashcalculatorPageState extends State<CashcalculatorPage> {
                                         Text(
                                           '${'terms_n_conditions'.tr}:',
                                           style: TextStyle(
-                                            fontSize: 16,
+                                            fontSize: 12,
                                             fontWeight: FontWeight.bold,
                                             color: textColor,
                                           ),
@@ -690,9 +857,9 @@ class _CashcalculatorPageState extends State<CashcalculatorPage> {
                                                     CrossAxisAlignment.start,
                                                 children: [
                                                   Text(
-                                                    '${index + 1}. ',
+                                                    '${index + 1}.   ',
                                                     style: TextStyle(
-                                                      fontSize: 14,
+                                                      fontSize: 8,
                                                       color:
                                                           themeController
                                                               .isDarkMode
@@ -707,7 +874,7 @@ class _CashcalculatorPageState extends State<CashcalculatorPage> {
                                                       textAlign:
                                                           TextAlign.justify,
                                                       style: TextStyle(
-                                                        fontSize: 14,
+                                                        fontSize: 8,
                                                         color:
                                                             themeController
                                                                 .isDarkMode
@@ -726,6 +893,7 @@ class _CashcalculatorPageState extends State<CashcalculatorPage> {
                                     ),
                                   ),
 
+                                  // Table tab (unchanged)
                                   Padding(
                                     padding: const EdgeInsets.all(8.0),
                                     child:
@@ -763,20 +931,8 @@ class _CashcalculatorPageState extends State<CashcalculatorPage> {
     });
   }
 
-  String _formatCurrency(int v) {
-    final s = v.toString();
-    final buf = StringBuffer();
-    int cnt = 0;
-    for (int i = s.length - 1; i >= 0; i--) {
-      buf.write(s[i]);
-      cnt++;
-      if (cnt == 3 && i != 0) {
-        buf.write('.');
-        cnt = 0;
-      }
-    }
-    final rev = buf.toString().split('').reversed.join();
-    return rev;
+  String _formatCurrencyDisplay(int v) {
+    return currencyFormatter.format(v);
   }
 
   Widget _buildScheduleTable(
@@ -795,6 +951,7 @@ class _CashcalculatorPageState extends State<CashcalculatorPage> {
             'Periode: $startLabel - $endLabel',
             style: TextStyle(
               fontWeight: FontWeight.bold,
+              fontSize: 10,
               color: themeController.isDarkMode ? Colors.white : Colors.black,
             ),
           ),
@@ -805,7 +962,7 @@ class _CashcalculatorPageState extends State<CashcalculatorPage> {
             child: SingleChildScrollView(
               child: DataTable(
                 border: TableBorder.all(color: Colors.grey, width: 1),
-                columnSpacing: 16,
+                columnSpacing: 12,
                 columns: const [
                   DataColumn(
                     label: Text(
@@ -813,6 +970,7 @@ class _CashcalculatorPageState extends State<CashcalculatorPage> {
                       style: TextStyle(
                         color: Colors.grey,
                         fontWeight: FontWeight.bold,
+                        fontSize: 10,
                       ),
                     ),
                   ),
@@ -822,6 +980,7 @@ class _CashcalculatorPageState extends State<CashcalculatorPage> {
                       style: TextStyle(
                         color: Colors.grey,
                         fontWeight: FontWeight.bold,
+                        fontSize: 10,
                       ),
                     ),
                   ),
@@ -831,6 +990,7 @@ class _CashcalculatorPageState extends State<CashcalculatorPage> {
                       style: TextStyle(
                         color: Colors.grey,
                         fontWeight: FontWeight.bold,
+                        fontSize: 10,
                       ),
                     ),
                   ),
@@ -842,19 +1002,28 @@ class _CashcalculatorPageState extends State<CashcalculatorPage> {
                           DataCell(
                             Text(
                               '${r['no']}',
-                              style: TextStyle(color: Colors.grey),
+                              style: TextStyle(
+                                color: Colors.grey,
+                                fontSize: 10,
+                              ),
                             ),
                           ),
                           DataCell(
                             Text(
-                              'Rp ${_formatCurrency((r['angsuran'] as num).toDouble().round())}',
-                              style: TextStyle(color: Colors.grey),
+                              'Rp ${_formatCurrencyDisplay((r['angsuran'] as num).toDouble().round())}',
+                              style: TextStyle(
+                                color: Colors.grey,
+                                fontSize: 10,
+                              ),
                             ),
                           ),
                           DataCell(
                             Text(
-                              'Rp ${_formatCurrency((r['sisaHutang'] as num).toDouble().round())}',
-                              style: TextStyle(color: Colors.grey),
+                              'Rp ${_formatCurrencyDisplay((r['sisaHutang'] as num).toDouble().round())}',
+                              style: TextStyle(
+                                color: Colors.grey,
+                                fontSize: 10,
+                              ),
                             ),
                           ),
                         ],

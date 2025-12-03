@@ -3,11 +3,8 @@ import 'package:dago_valley_explore_tv/presentation/controllers/virtualtour/deta
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:get/get.dart';
-import 'package:video_player_win/video_player_win.dart';
+import 'package:video_player/video_player.dart';
 import 'dart:ui';
-
-// Type alias
-typedef VideoPlayer = WinVideoPlayer;
 
 class ProductDetailPage extends GetView<DetailProductController> {
   const ProductDetailPage({Key? key}) : super(key: key);
@@ -344,14 +341,14 @@ class ProductDetailPage extends GetView<DetailProductController> {
                   ),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
-                    children: [
-                      const Icon(
+                    children: const [
+                      Icon(
                         Icons.zoom_in_outlined,
                         color: Colors.white,
                         size: 20,
                       ),
-                      const SizedBox(width: 8),
-                      const Text(
+                      SizedBox(width: 8),
+                      Text(
                         'Klik untuk zoom',
                         style: TextStyle(
                           color: Colors.white,
@@ -396,6 +393,8 @@ class ProductDetailPage extends GetView<DetailProductController> {
     return Obx(() {
       final isInitialized = controller.videoInitialized[index] ?? false;
       final isPlaying = controller.videoPlaying[index] ?? false;
+      final isMuted = controller.videoMuted[index] ?? false;
+      final showControls = controller.showControls[index] ?? true;
       final error = controller.videoErrors[index];
 
       if (error != null) {
@@ -456,7 +455,6 @@ class ProductDetailPage extends GetView<DetailProductController> {
         );
       }
 
-      // Rename variable untuk menghindari konflik
       final videoController = controller.getVideoController(index);
       if (videoController == null) {
         return Container(color: Colors.black);
@@ -464,7 +462,12 @@ class ProductDetailPage extends GetView<DetailProductController> {
 
       return GestureDetector(
         onTap: () {
-          controller.toggleVideoPlayback(index);
+          // Toggle controls visibility
+          if (showControls) {
+            controller.hideVideoControls(index);
+          } else {
+            controller.showVideoControls(index);
+          }
         },
         child: Container(
           color: Colors.black,
@@ -474,9 +477,11 @@ class ProductDetailPage extends GetView<DetailProductController> {
               Center(
                 child: AspectRatio(
                   aspectRatio: videoController.value.aspectRatio,
-                  child: WinVideoPlayer(videoController),
+                  child: VideoPlayer(videoController),
                 ),
               ),
+
+              // Play/Pause overlay (tengah)
               if (!isPlaying)
                 Center(
                   child: Container(
@@ -492,19 +497,26 @@ class ProductDetailPage extends GetView<DetailProductController> {
                     ),
                   ),
                 ),
-              // Video controls overlay
-              Positioned(
-                bottom: 0,
+
+              // Video controls overlay (bawah) - DENGAN ANIMASI SLIDE
+              AnimatedPositioned(
+                duration: const Duration(milliseconds: 300),
+                curve: Curves.easeInOut,
+                bottom: showControls ? 0 : -120,
                 left: 0,
                 right: 0,
                 child: Container(
-                  padding: const EdgeInsets.all(16),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 12,
+                  ),
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
                       begin: Alignment.bottomCenter,
                       end: Alignment.topCenter,
                       colors: [
-                        Colors.black.withOpacity(0.7),
+                        Colors.black.withOpacity(0.8),
+                        Colors.black.withOpacity(0.4),
                         Colors.transparent,
                       ],
                     ),
@@ -521,33 +533,48 @@ class ProductDetailPage extends GetView<DetailProductController> {
                           final duration = value.duration.inMilliseconds
                               .toDouble();
 
-                          return Slider(
-                            value: duration > 0 ? position : 0,
-                            max: duration > 0 ? duration : 1,
-                            onChanged: (newValue) {
-                              controller.seekVideo(
-                                index,
-                                Duration(milliseconds: newValue.toInt()),
-                              );
-                            },
-                            activeColor: Colors.white,
-                            inactiveColor: Colors.white38,
+                          return SliderTheme(
+                            data: SliderThemeData(
+                              trackHeight: 3,
+                              thumbShape: const RoundSliderThumbShape(
+                                enabledThumbRadius: 6,
+                              ),
+                              overlayShape: const RoundSliderOverlayShape(
+                                overlayRadius: 12,
+                              ),
+                            ),
+                            child: Slider(
+                              value: duration > 0 ? position : 0,
+                              max: duration > 0 ? duration : 1,
+                              onChanged: (newValue) {
+                                controller.seekVideo(
+                                  index,
+                                  Duration(milliseconds: newValue.toInt()),
+                                );
+                              },
+                              activeColor: Colors.red,
+                              inactiveColor: Colors.white38,
+                            ),
                           );
                         },
                       ),
-                      // Control buttons
+
+                      // Control buttons ROW
                       Row(
                         children: [
+                          // Play/Pause button
                           IconButton(
                             icon: Icon(
                               isPlaying ? Icons.pause : Icons.play_arrow,
                               color: Colors.white,
+                              size: 28,
                             ),
                             onPressed: () {
                               controller.toggleVideoPlayback(index);
                             },
                           ),
-                          const Spacer(),
+
+                          // Time display
                           ValueListenableBuilder(
                             valueListenable: videoController,
                             builder: (context, value, child) {
@@ -562,11 +589,31 @@ class ProductDetailPage extends GetView<DetailProductController> {
                               );
                             },
                           ),
-                          const SizedBox(width: 16),
-                          const Icon(
-                            Icons.videocam,
-                            color: Colors.white,
-                            size: 20,
+
+                          const Spacer(),
+
+                          // Mute button
+                          IconButton(
+                            icon: Icon(
+                              isMuted ? Icons.volume_off : Icons.volume_up,
+                              color: Colors.white,
+                              size: 24,
+                            ),
+                            onPressed: () {
+                              controller.toggleMute(index);
+                            },
+                          ),
+
+                          // Fullscreen button
+                          IconButton(
+                            icon: const Icon(
+                              Icons.fullscreen,
+                              color: Colors.white,
+                              size: 24,
+                            ),
+                            onPressed: () {
+                              controller.openFullscreen();
+                            },
                           ),
                         ],
                       ),
@@ -890,6 +937,8 @@ class ProductDetailPage extends GetView<DetailProductController> {
       final videoController = controller.getVideoController(index);
       final isInitialized = controller.videoInitialized[index] ?? false;
       final isPlaying = controller.videoPlaying[index] ?? false;
+      final isMuted = controller.videoMuted[index] ?? false;
+      final showControls = controller.showControls[index] ?? true;
 
       if (videoController == null || !isInitialized) {
         return const Center(
@@ -899,7 +948,11 @@ class ProductDetailPage extends GetView<DetailProductController> {
 
       return GestureDetector(
         onTap: () {
-          controller.toggleVideoPlayback(index);
+          if (showControls) {
+            controller.hideVideoControls(index);
+          } else {
+            controller.showVideoControls(index);
+          }
         },
         child: Stack(
           fit: StackFit.expand,
@@ -925,6 +978,119 @@ class ProductDetailPage extends GetView<DetailProductController> {
                   ),
                 ),
               ),
+
+            // Controls dengan animasi slide
+            AnimatedPositioned(
+              duration: const Duration(milliseconds: 300),
+              curve: Curves.easeInOut,
+              bottom: showControls ? 0 : -120,
+              left: 0,
+              right: 0,
+              child: Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 24,
+                  vertical: 16,
+                ),
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.bottomCenter,
+                    end: Alignment.topCenter,
+                    colors: [
+                      Colors.black.withOpacity(0.8),
+                      Colors.black.withOpacity(0.4),
+                      Colors.transparent,
+                    ],
+                  ),
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    ValueListenableBuilder(
+                      valueListenable: videoController,
+                      builder: (context, value, child) {
+                        final position = value.position.inMilliseconds
+                            .toDouble();
+                        final duration = value.duration.inMilliseconds
+                            .toDouble();
+
+                        return SliderTheme(
+                          data: SliderThemeData(
+                            trackHeight: 4,
+                            thumbShape: const RoundSliderThumbShape(
+                              enabledThumbRadius: 8,
+                            ),
+                            overlayShape: const RoundSliderOverlayShape(
+                              overlayRadius: 14,
+                            ),
+                          ),
+                          child: Slider(
+                            value: duration > 0 ? position : 0,
+                            max: duration > 0 ? duration : 1,
+                            onChanged: (newValue) {
+                              controller.seekVideo(
+                                index,
+                                Duration(milliseconds: newValue.toInt()),
+                              );
+                            },
+                            activeColor: Colors.red,
+                            inactiveColor: Colors.white38,
+                          ),
+                        );
+                      },
+                    ),
+                    Row(
+                      children: [
+                        IconButton(
+                          icon: Icon(
+                            isPlaying ? Icons.pause : Icons.play_arrow,
+                            color: Colors.white,
+                            size: 32,
+                          ),
+                          onPressed: () {
+                            controller.toggleVideoPlayback(index);
+                          },
+                        ),
+                        ValueListenableBuilder(
+                          valueListenable: videoController,
+                          builder: (context, value, child) {
+                            final position = value.position;
+                            final duration = value.duration;
+                            return Text(
+                              '${_formatDuration(position)} / ${_formatDuration(duration)}',
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 14,
+                              ),
+                            );
+                          },
+                        ),
+                        const Spacer(),
+                        IconButton(
+                          icon: Icon(
+                            isMuted ? Icons.volume_off : Icons.volume_up,
+                            color: Colors.white,
+                            size: 28,
+                          ),
+                          onPressed: () {
+                            controller.toggleMute(index);
+                          },
+                        ),
+                        IconButton(
+                          icon: const Icon(
+                            Icons.fullscreen_exit,
+                            color: Colors.white,
+                            size: 28,
+                          ),
+                          onPressed: () {
+                            controller.closeFullscreen();
+                          },
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
           ],
         ),
       );

@@ -17,7 +17,7 @@ class CustomDrawerHeader extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Image.asset("assets/logo-dago.webp", width: 64),
+          Image.asset("assets/logo-dago.webp", width: 50),
           if (isColapsed) const SizedBox(width: 10),
           if (isColapsed)
             const Expanded(
