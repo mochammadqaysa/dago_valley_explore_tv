@@ -96,7 +96,7 @@ class _CashcalculatorPageState extends State<CashcalculatorPage> {
     if (_activeController == null) return;
 
     final currentText = _activeController!.text
-        .replaceAll('. ', '')
+        .replaceAll('.', '')
         .replaceAll(',', '')
         .trim();
 
@@ -116,7 +116,7 @@ class _CashcalculatorPageState extends State<CashcalculatorPage> {
     } else {
       // Number keys
       if (currentText == '0' && value == '0') return;
-      if (currentText == '0' && value != '. ') {
+      if (currentText == '0' && value != '.') {
         newText = value;
       } else {
         newText = currentText + value;
@@ -465,7 +465,7 @@ class _CashcalculatorPageState extends State<CashcalculatorPage> {
                                   children: [
                                     // === Kolom DP ===
                                     Expanded(
-                                      flex: 1,
+                                      flex: 2,
                                       child: Column(
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
