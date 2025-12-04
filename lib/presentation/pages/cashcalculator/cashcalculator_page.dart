@@ -46,7 +46,7 @@ class _CashcalculatorPageState extends State<CashcalculatorPage> {
     if (paymentMethod == PaymentMethod.kprSyariah) {
       return [5, 10, 15, 20];
     } else {
-      return [1, 2, 3, 4];
+      return [1, 2];
     }
   }
 
@@ -318,18 +318,23 @@ class _CashcalculatorPageState extends State<CashcalculatorPage> {
                                     dropdownColor: cardColor,
                                     focusColor: cardColor,
                                     underline: const SizedBox(),
-                                    items: houseModels.map((m) {
-                                      return DropdownMenuItem(
-                                        value: m,
-                                        child: Text(
-                                          '${m.displayName} - Rp.   ${_formatCurrencyDisplay(m.hargaCash.round())}',
-                                          style: TextStyle(
-                                            color: textColor,
-                                            fontSize: 10,
-                                          ),
-                                        ),
-                                      );
-                                    }).toList(),
+                                    items: houseModels
+                                        .where((m) {
+                                          return m.hargaCash > 0;
+                                        })
+                                        .map((m) {
+                                          return DropdownMenuItem(
+                                            value: m,
+                                            child: Text(
+                                              '${m.displayName} - Rp.   ${_formatCurrencyDisplay(m.hargaCash.round())}',
+                                              style: TextStyle(
+                                                color: textColor,
+                                                fontSize: 10,
+                                              ),
+                                            ),
+                                          );
+                                        })
+                                        .toList(),
                                     onChanged: (v) {
                                       setState(() {
                                         selectedModel = v;
@@ -388,7 +393,7 @@ class _CashcalculatorPageState extends State<CashcalculatorPage> {
                                         onChanged: (v) {
                                           setState(() {
                                             paymentMethod = v!;
-                                            tenor = 4;
+                                            tenor = 2;
                                             marginPersen = marginDeveloper;
                                             customDp = null;
                                             _dpController.clear();

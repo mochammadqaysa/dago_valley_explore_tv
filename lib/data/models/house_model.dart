@@ -390,7 +390,7 @@ const List<HouseModel> houseModels = [
     isAddendum: false,
     blok: ["F1", "F7"],
     jumlahUnit: 2,
-    hargaCash: 3787000000,
+    hargaCash: 0,
     gambar: [
       //gaada asetnya, pakai yang 131/150
       "assets/rumah/harmoni/harmoni_131_150/slide_1.jpg",
