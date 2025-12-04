@@ -152,6 +152,9 @@ class SplashController extends GetxController {
               housing.siteplans!.map((e) => e.imageUrl).toList(),
             );
             await _downloadImages(
+              housing.siteplans!.map((e) => e.imageTahap2Url).toList(),
+            );
+            await _downloadImages(
               housing.siteplans!.map((e) => e.mapUrl).toList(),
             );
             await _downloadImages(

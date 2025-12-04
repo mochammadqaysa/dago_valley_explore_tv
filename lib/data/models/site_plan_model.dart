@@ -6,6 +6,7 @@ class SitePlanModel extends SitePlan {
     required this.housingId,
     required this.name,
     required this.imageUrl,
+    required this.imageTahap2Url,
     required this.mapUrl,
     required this.fasumUrl,
     required this.timelineProgressUrl,
@@ -16,6 +17,7 @@ class SitePlanModel extends SitePlan {
          housingId: housingId,
          name: name,
          imageUrl: imageUrl,
+         imageTahap2Url: imageTahap2Url,
          mapUrl: mapUrl,
          fasumUrl: fasumUrl,
          timelineProgressUrl: timelineProgressUrl,
@@ -27,6 +29,7 @@ class SitePlanModel extends SitePlan {
   final String housingId;
   final String name;
   final String imageUrl;
+  final String imageTahap2Url;
   final String mapUrl;
   final String fasumUrl;
   final String timelineProgressUrl;
@@ -39,6 +42,7 @@ class SitePlanModel extends SitePlan {
     housingId: json["housing_id"],
     name: json["name"],
     imageUrl: json["imageUrl"],
+    imageTahap2Url: json["imageTahap2Url"],
     mapUrl: json["mapUrl"],
     fasumUrl: json["fasumUrl"],
     timelineProgressUrl: json["timelineProgressUrl"],
@@ -51,6 +55,7 @@ class SitePlanModel extends SitePlan {
     "housing_id": housingId,
     "name": name,
     "imageUrl": imageUrl,
+    "imageTahap2Url": imageTahap2Url,
     "mapUrl": mapUrl,
     "fasumUrl": fasumUrl,
     "timelineProgressUrl": timelineProgressUrl,

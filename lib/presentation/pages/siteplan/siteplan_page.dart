@@ -4,13 +4,40 @@ import 'package:dago_valley_explore_tv/app/config/app_colors.dart';
 import 'package:dago_valley_explore_tv/app/services/local_storage.dart';
 import 'package:dago_valley_explore_tv/presentation/controllers/siteplan/siteplan_controller.dart';
 import 'package:dago_valley_explore_tv/presentation/controllers/theme/theme_controller.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:panorama_viewer/panorama_viewer.dart';
 
-class SiteplanPage extends GetView<SiteplanController> {
+class SiteplanPage extends StatefulWidget {
   const SiteplanPage({Key? key}) : super(key: key);
+
+  @override
+  State<SiteplanPage> createState() => _SiteplanPageState();
+}
+
+class _SiteplanPageState extends State<SiteplanPage>
+    with SingleTickerProviderStateMixin {
+  // keep using controller via Get
+  final SiteplanController controller = Get.find<SiteplanController>();
+
+  // Tab controller for "Siteplan Status" pills (Tahap 1 / Tahap 2)
+  late final TabController _statusTabController;
+
+  @override
+  void initState() {
+    super.initState();
+    _statusTabController = TabController(length: 2, vsync: this);
+    // Optional: start on tahap 1 (index 0)
+    _statusTabController.index = 0;
+  }
+
+  @override
+  void dispose() {
+    _statusTabController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -20,10 +47,10 @@ class SiteplanPage extends GetView<SiteplanController> {
       body: SafeArea(
         child: Column(
           children: [
-            // ✅ Segmented Button Tab Bar
+            // Segmented Button Tab Bar
             _buildSegmentedTabBar(context, themeController),
 
-            // ✅ Tab Content - UBAH DARI Expanded JADI FLEXIBLE ATAU ALIGN
+            // Tab Content
             Expanded(
               child: Obx(
                 () => Align(
@@ -38,7 +65,7 @@ class SiteplanPage extends GetView<SiteplanController> {
     );
   }
 
-  // ✅ Build Segmented Button Tab Bar
+  // Build Segmented Button Tab Bar
   Widget _buildSegmentedTabBar(
     BuildContext context,
     ThemeController themeController,
@@ -52,7 +79,7 @@ class SiteplanPage extends GetView<SiteplanController> {
             segments: SiteplanTabType.values.map((tab) {
               return ButtonSegment<SiteplanTabType>(
                 value: tab,
-                label: Text(tab.label, style: TextStyle(fontSize: 11)),
+                label: Text(tab.label, style: const TextStyle(fontSize: 11)),
                 icon: Icon(tab.icon, size: 12),
               );
             }).toList(),
@@ -90,7 +117,7 @@ class SiteplanPage extends GetView<SiteplanController> {
     );
   }
 
-  // ✅ Build Tab Content based on selected tab
+  // Build Tab Content based on selected tab
   Widget _buildTabContent(
     BuildContext context,
     ThemeController themeController,
@@ -167,7 +194,7 @@ class SiteplanPage extends GetView<SiteplanController> {
     );
   }
 
-  // ✅ Wrapper untuk InteractiveViewer dengan zoom controls
+  // Wrapper untuk InteractiveViewer dengan zoom controls
   Widget _buildZoomableImage({
     required String imageUrl,
     required BoxFit fit,
@@ -196,7 +223,7 @@ class SiteplanPage extends GetView<SiteplanController> {
             children: [
               // Zoom In Button
               FloatingActionButton.small(
-                heroTag: 'zoom_in',
+                heroTag: 'zoom_in_${imageUrl.hashCode}',
                 onPressed: () {
                   final currentScale = transformationController.value
                       .getMaxScaleOnAxis();
@@ -217,7 +244,7 @@ class SiteplanPage extends GetView<SiteplanController> {
               const SizedBox(height: 8),
               // Zoom Out Button
               FloatingActionButton.small(
-                heroTag: 'zoom_out',
+                heroTag: 'zoom_out_${imageUrl.hashCode}',
                 onPressed: () {
                   final currentScale = transformationController.value
                       .getMaxScaleOnAxis();
@@ -238,7 +265,7 @@ class SiteplanPage extends GetView<SiteplanController> {
               const SizedBox(height: 8),
               // Reset Zoom Button
               FloatingActionButton.small(
-                heroTag: 'zoom_reset',
+                heroTag: 'zoom_reset_${imageUrl.hashCode}',
                 onPressed: () {
                   transformationController.value = Matrix4.identity();
                 },
@@ -259,15 +286,13 @@ class SiteplanPage extends GetView<SiteplanController> {
     );
   }
 
-  // ✅ Map Tab Content - HEIGHT SEKARANG AKAN BEKERJA
+  // Map Tab Content
   Widget _buildMapTab(BuildContext context, ThemeController themeController) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: SizedBox(
         width: MediaQuery.of(context).size.width,
-        height:
-            MediaQuery.of(context).size.height *
-            0.759, // ← SEKARANG AKAN BEKERJA
+        height: MediaQuery.of(context).size.height * 0.759,
         child: ClipRRect(
           borderRadius: BorderRadius.circular(12),
           child: Container(
@@ -288,7 +313,7 @@ class SiteplanPage extends GetView<SiteplanController> {
     );
   }
 
-  // ✅ Fasum Tab Content - DENGAN SIZED BOX
+  // Fasum Tab Content
   Widget _buildFasumTab(BuildContext context, ThemeController themeController) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -315,7 +340,7 @@ class SiteplanPage extends GetView<SiteplanController> {
     );
   }
 
-  // ✅ Timeline Progress Tab Content - DENGAN SIZED BOX
+  // Timeline Progress Tab Content
   Widget _buildTimelineProgressTab(
     BuildContext context,
     ThemeController themeController,
@@ -345,11 +370,15 @@ class SiteplanPage extends GetView<SiteplanController> {
     );
   }
 
-  // ✅ Siteplan Status Tab Content - DENGAN SIZED BOX
+  // Siteplan Status Tab Content - with pills for Tahap 1 / Tahap 2
   Widget _buildSiteplanStatusTab(
     BuildContext context,
     ThemeController themeController,
   ) {
+    final isDark = themeController.isDarkMode;
+    final tahap1Url = controller.firstSiteplan.imageUrl;
+    final tahap2Url = controller.firstSiteplan.imageTahap2Url;
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: SizedBox(
@@ -358,16 +387,89 @@ class SiteplanPage extends GetView<SiteplanController> {
         child: ClipRRect(
           borderRadius: BorderRadius.circular(12),
           child: Container(
-            color: themeController.isDarkMode ? Colors.black : Colors.white,
-            child: Container(
-              color: themeController.isDarkMode
-                  ? Colors.grey[900]
-                  : Colors.grey[200],
-              child: _buildZoomableImage(
-                imageUrl: controller.firstSiteplan.imageUrl,
-                fit: BoxFit.contain,
-                themeController: themeController,
-              ),
+            color: isDark ? Colors.black : Colors.white,
+            child: Column(
+              children: [
+                // Pills / TabBar like virtualtour_page.dart
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 12,
+                    horizontal: 12,
+                  ),
+                  child: Container(
+                    width: 260,
+                    height: 34,
+                    decoration: BoxDecoration(
+                      color: isDark ? Colors.grey[850] : Colors.grey[200],
+                      borderRadius: BorderRadius.circular(25),
+                    ),
+                    child: TabBar(
+                      controller: _statusTabController,
+                      indicator: BoxDecoration(
+                        color: AppColors.primary,
+                        borderRadius: BorderRadius.circular(25),
+                      ),
+                      indicatorSize: TabBarIndicatorSize.tab,
+                      labelColor: Colors.white,
+                      unselectedLabelColor: isDark
+                          ? Colors.white70
+                          : Colors.black54,
+                      labelStyle: const TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      tabs: [
+                        Tab(text: 'Tahap 1'),
+                        Tab(text: 'Tahap 2'),
+                      ],
+                    ),
+                  ),
+                ),
+
+                // Content area
+                Expanded(
+                  child: TabBarView(
+                    controller: _statusTabController,
+                    children: [
+                      // Tahap 1 - existing image
+                      Container(
+                        color: isDark ? Colors.grey[900] : Colors.grey[200],
+                        child: _buildZoomableImage(
+                          imageUrl: tahap1Url,
+                          fit: BoxFit.contain,
+                          themeController: themeController,
+                        ),
+                      ),
+
+                      // Tahap 2 - imageTahap2Url (fallback to placeholder if empty)
+                      Container(
+                        color: isDark ? Colors.grey[900] : Colors.grey[200],
+                        child: (tahap2Url.isNotEmpty)
+                            ? _buildZoomableImage(
+                                imageUrl: tahap2Url,
+                                fit: BoxFit.contain,
+                                themeController: themeController,
+                              )
+                            : Center(
+                                child: Padding(
+                                  padding: const EdgeInsets.all(24.0),
+                                  child: Text(
+                                    'No image available for Tahap 2',
+                                    style: TextStyle(
+                                      color: isDark
+                                          ? Colors.white70
+                                          : Colors.black54,
+                                      fontSize: 14,
+                                    ),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ),
+                              ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ),
           ),
         ),
@@ -375,7 +477,7 @@ class SiteplanPage extends GetView<SiteplanController> {
     );
   }
 
-  // ✅ Kawasan 360 Tab Content - DENGAN SIZED BOX
+  // Kawasan 360 Tab Content
   Widget _buildKawasan360Tab(
     BuildContext context,
     ThemeController themeController,
@@ -403,7 +505,7 @@ class SiteplanPage extends GetView<SiteplanController> {
     );
   }
 
-  // ✅ Coming Soon Widget (Reusable)
+  // Coming Soon Widget (Reusable)
   Widget _buildComingSoonWidget(
     BuildContext context,
     ThemeController themeController, {
