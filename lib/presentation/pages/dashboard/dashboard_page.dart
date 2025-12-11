@@ -1,6 +1,7 @@
 import 'package:dago_valley_explore_tv/app/config/app_colors.dart';
 import 'package:dago_valley_explore_tv/app/services/local_storage.dart';
 import 'package:dago_valley_explore_tv/app/types/tab_type.dart';
+import 'package:dago_valley_explore_tv/app/util/responsive.dart';
 import 'package:dago_valley_explore_tv/presentation/components/liquidglass/liquid_glass_button.dart';
 import 'package:dago_valley_explore_tv/presentation/components/liquidglass/liquid_glass_container.dart';
 import 'package:dago_valley_explore_tv/presentation/controllers/event/event_binding.dart';
@@ -26,10 +27,7 @@ class DashboardPage extends StatefulWidget {
 
 class _DashboardPageState extends State<DashboardPage> {
   void _showPromoModal() {
-    // Panggil binding secara manual sesuai pattern Anda
     PromoBinding().dependencies();
-
-    // Navigasi dengan fade transition
     Get.to(
       () => const PromoDetailPage(),
       transition: Transition.fade,
@@ -40,10 +38,7 @@ class _DashboardPageState extends State<DashboardPage> {
   }
 
   void _showQRCodeModal() {
-    // Panggil binding secara manual sesuai pattern Anda
     QrCodeBinding().dependencies();
-
-    // Navigasi dengan fade transition
     Get.to(
       () => const QRCodePage(),
       transition: Transition.fade,
@@ -54,10 +49,7 @@ class _DashboardPageState extends State<DashboardPage> {
   }
 
   void _showEventModal() {
-    // Panggil binding secara manual sesuai pattern Anda
     EventBinding().dependencies();
-
-    // Navigasi dengan fade transition
     Get.to(
       () => EventDetailPage(),
       transition: Transition.fade,
@@ -67,7 +59,6 @@ class _DashboardPageState extends State<DashboardPage> {
     );
   }
 
-  // Method untuk navigasi ke tab lain via sidebar
   void _navigateToTab(TabType tab) {
     final sidebarController = Get.find<SidebarController>();
     sidebarController.setActiveTab(tab);
@@ -78,239 +69,249 @@ class _DashboardPageState extends State<DashboardPage> {
     final themeController = Get.find<ThemeController>();
     final localeController = Get.find<LocaleController>();
     final _storage = Get.find<LocalStorageService>();
+
     return Obx(() {
       return Scaffold(
-        // backgroundColor: HexColor("121212"),
         body: SafeArea(
-          child: SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(
-                vertical: 24.0,
-                horizontal: 16,
+          child: Center(
+            child: ConstrainedBox(
+              constraints: BoxConstraints(
+                maxWidth: Responsive.maxContentWidth(context),
               ),
-              child: Column(
-                children: [
-                  Container(
-                    // height: 400,
-                    height: MediaQuery.of(context).size.height * 0.35,
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(10)),
-                    ),
-                    clipBehavior: Clip.antiAlias,
-                    child: Stack(
-                      children: [
-                        // Gambar
-                        Image.asset(
-                          "assets/1.jpg",
-                          width: double.infinity,
-                          height: double.infinity,
-                          fit: BoxFit.fitWidth,
-                        ),
-                        // Overlay hitam
-                        Container(color: Colors.black.withOpacity(0.5)),
-
-                        // Text di atas overlay
-                        Center(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                "welcome_title".tr,
-                                style: TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
-                                  color: AppColors.white,
-                                ),
-                                textAlign: TextAlign.center,
-                              ),
-                              SizedBox(height: 8),
-                              Container(
-                                width: MediaQuery.of(context).size.width * 0.6,
-                                child: Text(
-                                  localeController.isEnglish
-                                      ? _storage.housings?.welcomeTextEn ??
-                                            "welcome_desc"
-                                      : _storage.housings?.welcomeText ??
-                                            "welcome_desc",
-                                  style: TextStyle(
-                                    color: AppColors.white,
-                                    fontSize: 12,
-                                  ),
-                                  textAlign: TextAlign.center,
-                                ),
-                              ),
-                              SizedBox(height: 8),
-                              LiquidGlassButton(
-                                width: 160,
-                                height: 35,
-                                fontSize: 14,
-                                borderRadius: 30,
-                                text: 'view_promo'.tr,
-                                onPressed: _showPromoModal,
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding: EdgeInsets.symmetric(
+                    vertical: Responsive.verticalPadding(context),
+                    horizontal: Responsive.horizontalPadding(context),
                   ),
-                  SizedBox(height: 16),
-
-                  // Ganti dengan Row + MainAxisAlignment.spaceBetween
-                  Container(
-                    height: MediaQuery.of(context).size.height * 0.42,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Expanded(
-                          child: SitePlanCard(
-                            title: 'site_plan'.tr,
-                            imageUrl: 'assets/siteplan.jpg',
-                            buttonText: 'check_availability'.tr,
-                            onButtonPressed: () {
-                              // Navigate ke SitePlanPage via sidebar
-                              _navigateToTab(TabType.siteplanpage);
-                            },
-                            titleBackgroundColor: themeController.isDarkMode
-                                ? Colors.black
-                                : Colors.white,
-                            buttonColor: Colors.white,
-                          ),
+                  child: Column(
+                    children: [
+                      Container(
+                        // height: 400,
+                        height: MediaQuery.of(context).size.height * 0.35,
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.all(Radius.circular(10)),
                         ),
-                        SizedBox(width: 24),
-                        Expanded(
-                          child: SitePlanCard(
-                            title: 'house_type'.tr,
-                            imageUrl: 'assets/tiperumah.jpg',
-                            buttonText: 'check_availability'.tr,
-                            onButtonPressed: () {
-                              // Navigate ke VirtualTourPage (Product Page) via sidebar
-                              _navigateToTab(TabType.productpage);
-                            },
-                            titleBackgroundColor: themeController.isDarkMode
-                                ? Colors.black
-                                : Colors.white,
-                            buttonColor: Colors.white,
-                          ),
-                        ),
-                        SizedBox(width: 24),
-                        Expanded(
-                          child: SitePlanCard(
-                            title: 'agreements_and_legality'.tr,
-                            imageUrl: 'assets/akad.jpg',
-                            buttonText: 'check_availability'.tr,
-                            onButtonPressed: () {
-                              // Navigate ke LicenseLegalDocumentPage via sidebar
-                              _navigateToTab(TabType.licenselegaldocumentpage);
-                            },
-                            titleBackgroundColor: themeController.isDarkMode
-                                ? Colors.black
-                                : Colors.white,
-                            buttonColor: Colors.white,
-                          ),
-                        ),
-                        SizedBox(width: 24),
-                        Expanded(
-                          child: SitePlanCard(
-                            title: 'event'.tr,
-                            imageUrl: 'assets/event.jpg',
-                            buttonText: 'check_availability'.tr,
-                            onButtonPressed: _showEventModal,
-                            titleBackgroundColor: themeController.isDarkMode
-                                ? Colors.black
-                                : Colors.white,
-                            buttonColor: Colors.white,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-
-                  SizedBox(height: 16),
-                  LiquidGlassContainer(
-                    glassColor: Colors.black,
-                    glassAccentColor: Colors.black,
-                    height: 50,
-                    width: double.infinity,
-                    borderRadius: 13,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Expanded(
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                              vertical: 15,
-                              horizontal: 24,
+                        clipBehavior: Clip.antiAlias,
+                        child: Stack(
+                          children: [
+                            // Gambar
+                            Image.asset(
+                              "assets/1.jpg",
+                              width: double.infinity,
+                              height: double.infinity,
+                              fit: BoxFit.fitWidth,
                             ),
-                            child: Row(
-                              children: [
-                                // // WhatsApp
-                                // SvgPicture.asset(
-                                //   "assets/whatsapp.svg",
-                                //   color: Colors.white,
-                                //   height: 20,
-                                // ),
-                                // SizedBox(width: 8),
-                                // Text(
-                                //   "+6289765345729",
-                                //   style: TextStyle(color: Colors.white),
-                                // ),
-                                // SizedBox(width: 20),
+                            // Overlay hitam
+                            Container(color: Colors.black.withOpacity(0.5)),
 
-                                // Website
-                                SvgPicture.asset(
-                                  "assets/web.svg",
-                                  color: Colors.white,
-                                  height: 20,
-                                ),
-                                SizedBox(width: 8),
-                                Text(
-                                  "dagovalleybandung.com",
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 12,
+                            // Text di atas overlay
+                            Center(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    "welcome_title".tr,
+                                    style: TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold,
+                                      color: AppColors.white,
+                                    ),
+                                    textAlign: TextAlign.center,
                                   ),
-                                ),
-                                SizedBox(width: 20),
-
-                                // Instagram
-                                SvgPicture.asset(
-                                  "assets/instagram.svg",
-                                  color: Colors.white,
-                                  height: 20,
-                                ),
-                                SizedBox(width: 8),
-                                Text(
-                                  "@dagovalleybandung",
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 12,
+                                  SizedBox(height: 8),
+                                  Container(
+                                    width:
+                                        MediaQuery.of(context).size.width * 0.6,
+                                    child: Text(
+                                      localeController.isEnglish
+                                          ? _storage.housings?.welcomeTextEn ??
+                                                "welcome_desc"
+                                          : _storage.housings?.welcomeText ??
+                                                "welcome_desc",
+                                      style: TextStyle(
+                                        color: AppColors.white,
+                                        fontSize: 12,
+                                      ),
+                                      textAlign: TextAlign.center,
+                                    ),
                                   ),
-                                ),
-                              ],
+                                  SizedBox(height: 8),
+                                  LiquidGlassButton(
+                                    width: 160,
+                                    height: 35,
+                                    fontSize: 14,
+                                    borderRadius: 30,
+                                    text: 'view_promo'.tr,
+                                    onPressed: _showPromoModal,
+                                  ),
+                                ],
+                              ),
                             ),
-                          ),
+                          ],
                         ),
+                      ),
+                      SizedBox(height: 16),
 
-                        // Tombol di kanan - Trigger QR Modal
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 10.0,
-                            vertical: 6,
-                          ),
-                          child: LiquidGlassButton(
-                            borderRadius: 8,
-                            text: 'rate_us'.tr,
-                            icon: Icons.qr_code_2,
-                            glassColor: Colors.grey.withOpacity(0.3),
-                            onPressed: _showQRCodeModal, // Panggil QR Modal
-                          ),
+                      // Ganti dengan Row + MainAxisAlignment.spaceBetween
+                      Container(
+                        height: MediaQuery.of(context).size.height * 0.42,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Expanded(
+                              child: SitePlanCard(
+                                title: 'site_plan'.tr,
+                                imageUrl: 'assets/siteplan.jpg',
+                                buttonText: 'check_availability'.tr,
+                                onButtonPressed: () {
+                                  // Navigate ke SitePlanPage via sidebar
+                                  _navigateToTab(TabType.siteplanpage);
+                                },
+                                titleBackgroundColor: themeController.isDarkMode
+                                    ? Colors.black
+                                    : Colors.white,
+                                buttonColor: Colors.white,
+                              ),
+                            ),
+                            SizedBox(width: 24),
+                            Expanded(
+                              child: SitePlanCard(
+                                title: 'house_type'.tr,
+                                imageUrl: 'assets/tiperumah.jpg',
+                                buttonText: 'check_availability'.tr,
+                                onButtonPressed: () {
+                                  // Navigate ke VirtualTourPage (Product Page) via sidebar
+                                  _navigateToTab(TabType.productpage);
+                                },
+                                titleBackgroundColor: themeController.isDarkMode
+                                    ? Colors.black
+                                    : Colors.white,
+                                buttonColor: Colors.white,
+                              ),
+                            ),
+                            SizedBox(width: 24),
+                            Expanded(
+                              child: SitePlanCard(
+                                title: 'agreements_and_legality'.tr,
+                                imageUrl: 'assets/akad.jpg',
+                                buttonText: 'check_availability'.tr,
+                                onButtonPressed: () {
+                                  // Navigate ke LicenseLegalDocumentPage via sidebar
+                                  _navigateToTab(
+                                    TabType.licenselegaldocumentpage,
+                                  );
+                                },
+                                titleBackgroundColor: themeController.isDarkMode
+                                    ? Colors.black
+                                    : Colors.white,
+                                buttonColor: Colors.white,
+                              ),
+                            ),
+                            SizedBox(width: 24),
+                            Expanded(
+                              child: SitePlanCard(
+                                title: 'event'.tr,
+                                imageUrl: 'assets/event.jpg',
+                                buttonText: 'check_availability'.tr,
+                                onButtonPressed: _showEventModal,
+                                titleBackgroundColor: themeController.isDarkMode
+                                    ? Colors.black
+                                    : Colors.white,
+                                buttonColor: Colors.white,
+                              ),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
+                      ),
+
+                      SizedBox(height: 16),
+                      LiquidGlassContainer(
+                        glassColor: Colors.black,
+                        glassAccentColor: Colors.black,
+                        height: 50,
+                        width: double.infinity,
+                        borderRadius: 13,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Expanded(
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 15,
+                                  horizontal: 24,
+                                ),
+                                child: Row(
+                                  children: [
+                                    // // WhatsApp
+                                    // SvgPicture.asset(
+                                    //   "assets/whatsapp.svg",
+                                    //   color: Colors.white,
+                                    //   height: 20,
+                                    // ),
+                                    // SizedBox(width: 8),
+                                    // Text(
+                                    //   "+6289765345729",
+                                    //   style: TextStyle(color: Colors.white),
+                                    // ),
+                                    // SizedBox(width: 20),
+
+                                    // Website
+                                    SvgPicture.asset(
+                                      "assets/web.svg",
+                                      color: Colors.white,
+                                      height: 20,
+                                    ),
+                                    SizedBox(width: 8),
+                                    Text(
+                                      "dagovalleybandung.com",
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 12,
+                                      ),
+                                    ),
+                                    SizedBox(width: 20),
+
+                                    // Instagram
+                                    SvgPicture.asset(
+                                      "assets/instagram.svg",
+                                      color: Colors.white,
+                                      height: 20,
+                                    ),
+                                    SizedBox(width: 8),
+                                    Text(
+                                      "@dagovalleybandung",
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 12,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+
+                            // Tombol di kanan - Trigger QR Modal
+                            Padding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 10.0,
+                                vertical: 6,
+                              ),
+                              child: LiquidGlassButton(
+                                borderRadius: 8,
+                                text: 'rate_us'.tr,
+                                icon: Icons.qr_code_2,
+                                glassColor: Colors.grey.withOpacity(0.3),
+                                onPressed: _showQRCodeModal, // Panggil QR Modal
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
-                ],
+                ),
               ),
             ),
           ),

@@ -71,6 +71,14 @@ class DetailProductController extends GetxController {
     }
   }
 
+  void pauseVideo(int index) {
+    final videoController = getVideoController(index);
+    if (videoController != null && videoController.value.isPlaying) {
+      videoController.pause();
+      videoPlaying[index] = false;
+    }
+  }
+
   // Check if asset exists
   Future<bool> _checkAssetExists(String assetPath) async {
     try {

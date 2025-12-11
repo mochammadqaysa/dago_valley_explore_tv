@@ -518,142 +518,144 @@ class _PdfViewerPageState extends State<PdfViewerPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xFF525659),
-      appBar: AppBar(
-        backgroundColor: const Color(0xFF323639),
-        elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
-          onPressed: () {
-            if (mounted) {
-              Navigator.of(context).pop();
-            }
-          },
-        ),
-        title: Text(
-          widget.title.replaceAll('.pdf', '').toUpperCase(),
-          style: const TextStyle(
-            color: Colors.white,
-            fontSize: 14,
-            fontWeight: FontWeight.w500,
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: const Color(0xFF525659),
+        appBar: AppBar(
+          backgroundColor: const Color(0xFF323639),
+          elevation: 0,
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back, color: Colors.white),
+            onPressed: () {
+              if (mounted) {
+                Navigator.of(context).pop();
+              }
+            },
           ),
-        ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.zoom_out, color: Colors.white),
-            onPressed: () => _updateZoom(-0.25),
-            tooltip: 'Zoom Out',
+          title: Text(
+            widget.title.replaceAll('.pdf', '').toUpperCase(),
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 14,
+              fontWeight: FontWeight.w500,
+            ),
           ),
-          Center(
-            child: Padding(
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.zoom_out, color: Colors.white),
+              onPressed: () => _updateZoom(-0.25),
+              tooltip: 'Zoom Out',
+            ),
+            Center(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8),
+                child: Text(
+                  '${(_pdfViewerController.zoomLevel * 100).toInt()}%',
+                  style: const TextStyle(color: Colors.white, fontSize: 14),
+                ),
+              ),
+            ),
+            IconButton(
+              icon: const Icon(Icons.zoom_in, color: Colors.white),
+              onPressed: () => _updateZoom(0.25),
+              tooltip: 'Zoom In',
+            ),
+            const SizedBox(width: 8),
+            IconButton(
+              icon: const Icon(Icons.chevron_left, color: Colors.white),
+              onPressed: _currentPage > 1
+                  ? () {
+                      if (mounted) {
+                        _pdfViewerController.previousPage();
+                      }
+                    }
+                  : null,
+              tooltip: 'Previous Page',
+            ),
+            Container(
               padding: const EdgeInsets.symmetric(horizontal: 8),
+              alignment: Alignment.center,
               child: Text(
-                '${(_pdfViewerController.zoomLevel * 100).toInt()}%',
+                '$_currentPage / $_totalPages',
                 style: const TextStyle(color: Colors.white, fontSize: 14),
               ),
             ),
-          ),
-          IconButton(
-            icon: const Icon(Icons.zoom_in, color: Colors.white),
-            onPressed: () => _updateZoom(0.25),
-            tooltip: 'Zoom In',
-          ),
-          const SizedBox(width: 8),
-          IconButton(
-            icon: const Icon(Icons.chevron_left, color: Colors.white),
-            onPressed: _currentPage > 1
-                ? () {
-                    if (mounted) {
-                      _pdfViewerController.previousPage();
-                    }
-                  }
-                : null,
-            tooltip: 'Previous Page',
-          ),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 8),
-            alignment: Alignment.center,
-            child: Text(
-              '$_currentPage / $_totalPages',
-              style: const TextStyle(color: Colors.white, fontSize: 14),
-            ),
-          ),
-          IconButton(
-            icon: const Icon(Icons.chevron_right, color: Colors.white),
-            onPressed: _currentPage < _totalPages
-                ? () {
-                    if (mounted) {
-                      _pdfViewerController.nextPage();
-                    }
-                  }
-                : null,
-            tooltip: 'Next Page',
-          ),
-          const SizedBox(width: 8),
-        ],
-      ),
-      body: Stack(
-        children: [
-          SfPdfViewer.asset(
-            widget.assetPath,
-            key: _pdfViewerKey,
-            controller: _pdfViewerController,
-            canShowScrollHead: false,
-            canShowScrollStatus: false,
-            enableDoubleTapZooming: true,
-            enableTextSelection: true,
-            pageLayoutMode: PdfPageLayoutMode.continuous,
-            onDocumentLoaded: (PdfDocumentLoadedDetails details) {
-              if (!mounted) return;
-              setState(() {
-                _totalPages = details.document.pages.count;
-                _isLoading = false;
-              });
-            },
-            onPageChanged: (PdfPageChangedDetails details) {
-              if (!mounted) return;
-              setState(() {
-                _currentPage = details.newPageNumber;
-              });
-            },
-            onDocumentLoadFailed: (PdfDocumentLoadFailedDetails details) {
-              if (kDebugMode) {
-                print('PDF Load Failed: ${details.error}');
-                print('Description: ${details.description}');
-              }
-
-              if (!mounted) return;
-
-              setState(() {
-                _isLoading = false;
-              });
-
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text('Failed to load PDF: ${details.description}'),
-                  backgroundColor: Colors.red,
-                  action: SnackBarAction(
-                    label: 'Close',
-                    textColor: Colors.white,
-                    onPressed: () {
+            IconButton(
+              icon: const Icon(Icons.chevron_right, color: Colors.white),
+              onPressed: _currentPage < _totalPages
+                  ? () {
                       if (mounted) {
-                        Navigator.of(context).pop();
+                        _pdfViewerController.nextPage();
                       }
-                    },
-                  ),
-                ),
-              );
-            },
-          ),
-          if (_isLoading)
-            Container(
-              color: Colors.black54,
-              child: const Center(
-                child: CircularProgressIndicator(color: Colors.white),
-              ),
+                    }
+                  : null,
+              tooltip: 'Next Page',
             ),
-        ],
+            const SizedBox(width: 8),
+          ],
+        ),
+        body: Stack(
+          children: [
+            SfPdfViewer.asset(
+              widget.assetPath,
+              key: _pdfViewerKey,
+              controller: _pdfViewerController,
+              canShowScrollHead: false,
+              canShowScrollStatus: false,
+              enableDoubleTapZooming: true,
+              enableTextSelection: true,
+              pageLayoutMode: PdfPageLayoutMode.continuous,
+              onDocumentLoaded: (PdfDocumentLoadedDetails details) {
+                if (!mounted) return;
+                setState(() {
+                  _totalPages = details.document.pages.count;
+                  _isLoading = false;
+                });
+              },
+              onPageChanged: (PdfPageChangedDetails details) {
+                if (!mounted) return;
+                setState(() {
+                  _currentPage = details.newPageNumber;
+                });
+              },
+              onDocumentLoadFailed: (PdfDocumentLoadFailedDetails details) {
+                if (kDebugMode) {
+                  print('PDF Load Failed: ${details.error}');
+                  print('Description: ${details.description}');
+                }
+
+                if (!mounted) return;
+
+                setState(() {
+                  _isLoading = false;
+                });
+
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text('Failed to load PDF: ${details.description}'),
+                    backgroundColor: Colors.red,
+                    action: SnackBarAction(
+                      label: 'Close',
+                      textColor: Colors.white,
+                      onPressed: () {
+                        if (mounted) {
+                          Navigator.of(context).pop();
+                        }
+                      },
+                    ),
+                  ),
+                );
+              },
+            ),
+            if (_isLoading)
+              Container(
+                color: Colors.black54,
+                child: const Center(
+                  child: CircularProgressIndicator(color: Colors.white),
+                ),
+              ),
+          ],
+        ),
       ),
     );
   }

@@ -67,109 +67,111 @@ class _VirtualtourPageState extends State<VirtualtourPage>
     final themeController = Get.find<ThemeController>();
 
     return Obx(() {
-      return Scaffold(
-        body: Column(
-          children: [
-            // Header dengan Tab Buttons di pojok kanan atas
-            Padding(
-              padding: const EdgeInsets.only(
-                top: 20,
-                right: 24,
-                left: 24,
-                bottom: 16,
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  // Title
-                  // Text(
-                  //   'Virtual Tour',
-                  //   style: TextStyle(
-                  //     fontSize: 32,
-                  //     fontWeight: FontWeight.bold,
-                  //     color: themeController.isDarkMode
-                  //         ? Colors.white
-                  //         : Colors.black,
-                  //   ),
-                  // ),
+      return SafeArea(
+        child: Scaffold(
+          body: Column(
+            children: [
+              // Header dengan Tab Buttons di pojok kanan atas
+              Padding(
+                padding: const EdgeInsets.only(
+                  top: 20,
+                  right: 24,
+                  left: 24,
+                  bottom: 16,
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    // Title
+                    // Text(
+                    //   'Virtual Tour',
+                    //   style: TextStyle(
+                    //     fontSize: 32,
+                    //     fontWeight: FontWeight.bold,
+                    //     color: themeController.isDarkMode
+                    //         ? Colors.white
+                    //         : Colors.black,
+                    //   ),
+                    // ),
 
-                  // Tab Control Buttons
-                  Container(
-                    width: 250, // Fixed width untuk TabBar
-                    height: 30,
-                    decoration: BoxDecoration(
-                      color: themeController.isDarkMode
-                          ? Colors.grey[850]
-                          : Colors.grey[200],
-                      borderRadius: BorderRadius.circular(25),
-                    ),
-                    child: TabBar(
-                      controller: _tabController,
-                      indicator: BoxDecoration(
-                        color: AppColors.primary,
+                    // Tab Control Buttons
+                    Container(
+                      width: 250, // Fixed width untuk TabBar
+                      height: 30,
+                      decoration: BoxDecoration(
+                        color: themeController.isDarkMode
+                            ? Colors.grey[850]
+                            : Colors.grey[200],
                         borderRadius: BorderRadius.circular(25),
                       ),
-                      indicatorSize: TabBarIndicatorSize.tab,
-                      dividerColor: Colors.transparent,
-                      labelColor: Colors.white,
-                      unselectedLabelColor: themeController.isDarkMode
-                          ? Colors.white70
-                          : Colors.black54,
-                      labelStyle: const TextStyle(
-                        fontSize: 10,
-                        fontWeight: FontWeight.bold,
+                      child: TabBar(
+                        controller: _tabController,
+                        indicator: BoxDecoration(
+                          color: AppColors.primary,
+                          borderRadius: BorderRadius.circular(25),
+                        ),
+                        indicatorSize: TabBarIndicatorSize.tab,
+                        dividerColor: Colors.transparent,
+                        labelColor: Colors.white,
+                        unselectedLabelColor: themeController.isDarkMode
+                            ? Colors.white70
+                            : Colors.black54,
+                        labelStyle: const TextStyle(
+                          fontSize: 10,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        tabs: [
+                          Tab(text: 'phase_one'.tr),
+                          Tab(text: 'phase_two'.tr),
+                        ],
                       ),
-                      tabs: [
-                        Tab(text: 'phase_one'.tr),
-                        Tab(text: 'phase_two'.tr),
-                      ],
                     ),
-                  ),
-                ],
-              ),
-            ),
-
-            // TabBarView Content
-            Expanded(
-              child: TabBarView(
-                controller: _tabController,
-                children: [
-                  // Tab 1: Foresta & Harmoni
-                  _buildTab1Content(themeController),
-
-                  // Tab 2: Other Models
-                  _buildTab2Content(themeController),
-                ],
-              ),
-            ),
-          ],
-        ),
-
-        // ✅ FAB YANG SUDAH DIKURANGI UKURANNYA
-        floatingActionButton: Container(
-          margin: const EdgeInsets.only(top: 15),
-          child: SizedBox(
-            height: 36, // ← Kurangi tinggi dari default (~48-56)
-            child: FloatingActionButton.extended(
-              onPressed: () => _showPanoramicView(),
-              backgroundColor: AppColors.primary,
-              elevation: 4, // ← Opsional: kurangi elevation juga
-              label: Text(
-                "Jelajahi 360 Panoramic View",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 12, // ← Kurangi ukuran font
+                  ],
                 ),
               ),
-              icon: Icon(
-                Icons.threesixty_rounded,
-                color: Colors.white,
-                size: 20, // ← Kurangi ukuran icon
+
+              // TabBarView Content
+              Expanded(
+                child: TabBarView(
+                  controller: _tabController,
+                  children: [
+                    // Tab 1: Foresta & Harmoni
+                    _buildTab1Content(themeController),
+
+                    // Tab 2: Other Models
+                    _buildTab2Content(themeController),
+                  ],
+                ),
+              ),
+            ],
+          ),
+
+          // ✅ FAB YANG SUDAH DIKURANGI UKURANNYA
+          floatingActionButton: Container(
+            margin: const EdgeInsets.only(top: 15),
+            child: SizedBox(
+              height: 36, // ← Kurangi tinggi dari default (~48-56)
+              child: FloatingActionButton.extended(
+                onPressed: () => _showPanoramicView(),
+                backgroundColor: AppColors.primary,
+                elevation: 4, // ← Opsional: kurangi elevation juga
+                label: Text(
+                  "Jelajahi 360 Panoramic View",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 12, // ← Kurangi ukuran font
+                  ),
+                ),
+                icon: Icon(
+                  Icons.threesixty_rounded,
+                  color: Colors.white,
+                  size: 20, // ← Kurangi ukuran icon
+                ),
               ),
             ),
           ),
+          floatingActionButtonLocation: FloatingActionButtonLocation.centerTop,
         ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerTop,
       );
     });
   }

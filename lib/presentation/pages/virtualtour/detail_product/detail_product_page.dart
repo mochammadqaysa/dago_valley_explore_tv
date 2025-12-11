@@ -767,169 +767,205 @@ class ProductDetailPage extends GetView<DetailProductController> {
     BuildContext context,
     ThemeController themeController,
   ) {
-    final currentIndex = controller.currentIndex.value;
-    final isVideo = controller.isVideo(currentIndex);
+    return Obx(() {
+      final currentIndex = controller.currentIndex.value;
 
-    return Material(
-      color: Colors.black.withOpacity(0.95),
-      child: Stack(
-        children: [
-          Center(
-            child: isVideo
-                ? _buildFullscreenVideo(currentIndex)
-                : InteractiveViewer(
-                    transformationController:
-                        controller.transformationController,
-                    minScale: 0.5,
-                    maxScale: 4.0,
-                    panEnabled: true,
-                    scaleEnabled: true,
-                    child: Image.asset(
-                      controller.images[currentIndex],
-                      fit: BoxFit.contain,
-                    ),
-                  ),
-          ),
-          Positioned(
-            top: 40,
-            right: 40,
-            child: Material(
-              color: Colors.transparent,
-              child: InkWell(
-                onTap: controller.closeFullscreen,
-                borderRadius: BorderRadius.circular(30),
-                child: Container(
-                  padding: const EdgeInsets.all(12),
-                  decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.2),
-                    shape: BoxShape.circle,
-                    border: Border.all(
-                      color: Colors.white.withOpacity(0.3),
-                      width: 1,
-                    ),
-                  ),
-                  child: const Icon(Icons.close, color: Colors.white, size: 24),
-                ),
-              ),
-            ),
-          ),
-          if (controller.totalItems > 1) ...[
-            Positioned(
-              left: 40,
-              top: 0,
-              bottom: 0,
-              child: Center(
-                child: Material(
-                  color: Colors.transparent,
-                  child: InkWell(
-                    onTap: () {
-                      final newIndex = currentIndex > 0
-                          ? currentIndex - 1
-                          : controller.totalItems - 1;
-                      controller.goToPage(newIndex);
-                      controller.transformationController.value =
-                          Matrix4.identity();
-                    },
-                    borderRadius: BorderRadius.circular(30),
-                    child: Container(
-                      padding: const EdgeInsets.all(16),
-                      decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.2),
-                        shape: BoxShape.circle,
-                        border: Border.all(
-                          color: Colors.white.withOpacity(0.3),
-                          width: 1,
+      return Material(
+        color: Colors.black.withOpacity(0.95),
+        child: Stack(
+          children: [
+            // PageView untuk swipe functionality
+            PageView.builder(
+              itemCount: controller.totalItems,
+              controller: PageController(initialPage: currentIndex),
+              onPageChanged: (index) {
+                // Pause video sebelumnya jika ada
+                if (controller.isVideo(currentIndex)) {
+                  controller.pauseVideo(currentIndex);
+                }
+
+                // Update index dan reset zoom
+                controller.setCurrentIndex(index);
+                controller.transformationController.value = Matrix4.identity();
+
+                // Update carousel utama juga
+                controller.goToPage(index);
+              },
+              itemBuilder: (context, index) {
+                final isVideo = controller.isVideo(index);
+
+                return Center(
+                  child: isVideo
+                      ? _buildFullscreenVideo(index)
+                      : InteractiveViewer(
+                          transformationController:
+                              controller.transformationController,
+                          minScale: 0.5,
+                          maxScale: 4.0,
+                          panEnabled: true,
+                          scaleEnabled: true,
+                          child: Image.asset(
+                            controller.images[index],
+                            fit: BoxFit.contain,
+                          ),
                         ),
-                      ),
-                      child: const Icon(
-                        Icons.arrow_back_ios_new,
-                        color: Colors.white,
-                        size: 24,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
+                );
+              },
             ),
+
+            // Close button (tetap di pojok kanan atas)
             Positioned(
+              top: 40,
               right: 40,
-              top: 0,
-              bottom: 0,
-              child: Center(
-                child: Material(
-                  color: Colors.transparent,
-                  child: InkWell(
-                    onTap: () {
-                      final newIndex = currentIndex < controller.totalItems - 1
-                          ? currentIndex + 1
-                          : 0;
-                      controller.goToPage(newIndex);
-                      controller.transformationController.value =
-                          Matrix4.identity();
-                    },
-                    borderRadius: BorderRadius.circular(30),
-                    child: Container(
-                      padding: const EdgeInsets.all(16),
-                      decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.2),
-                        shape: BoxShape.circle,
-                        border: Border.all(
-                          color: Colors.white.withOpacity(0.3),
-                          width: 1,
-                        ),
-                      ),
-                      child: const Icon(
-                        Icons.arrow_forward_ios,
-                        color: Colors.white,
-                        size: 24,
+              child: Material(
+                color: Colors.transparent,
+                child: InkWell(
+                  onTap: controller.closeFullscreen,
+                  borderRadius: BorderRadius.circular(30),
+                  child: Container(
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: Colors.white.withOpacity(0.2),
+                      shape: BoxShape.circle,
+                      border: Border.all(
+                        color: Colors.white.withOpacity(0.3),
+                        width: 1,
                       ),
                     ),
+                    child: const Icon(
+                      Icons.close,
+                      color: Colors.white,
+                      size: 24,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+
+            // Arrow buttons (opsional, tetap ada untuk alternatif navigasi)
+            if (controller.totalItems > 1) ...[
+              Positioned(
+                left: 40,
+                top: 0,
+                bottom: 0,
+                child: Center(
+                  child: Material(
+                    color: Colors.transparent,
+                    child: InkWell(
+                      onTap: () {
+                        final newIndex = currentIndex > 0
+                            ? currentIndex - 1
+                            : controller.totalItems - 1;
+                        controller.goToPage(newIndex);
+                        controller.transformationController.value =
+                            Matrix4.identity();
+                      },
+                      borderRadius: BorderRadius.circular(30),
+                      child: Container(
+                        padding: const EdgeInsets.all(16),
+                        decoration: BoxDecoration(
+                          color: Colors.white.withOpacity(0.2),
+                          shape: BoxShape.circle,
+                          border: Border.all(
+                            color: Colors.white.withOpacity(0.3),
+                            width: 1,
+                          ),
+                        ),
+                        child: const Icon(
+                          Icons.arrow_back_ios_new,
+                          color: Colors.white,
+                          size: 24,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              Positioned(
+                right: 40,
+                top: 0,
+                bottom: 0,
+                child: Center(
+                  child: Material(
+                    color: Colors.transparent,
+                    child: InkWell(
+                      onTap: () {
+                        final newIndex =
+                            currentIndex < controller.totalItems - 1
+                            ? currentIndex + 1
+                            : 0;
+                        controller.goToPage(newIndex);
+                        controller.transformationController.value =
+                            Matrix4.identity();
+                      },
+                      borderRadius: BorderRadius.circular(30),
+                      child: Container(
+                        padding: const EdgeInsets.all(16),
+                        decoration: BoxDecoration(
+                          color: Colors.white.withOpacity(0.2),
+                          shape: BoxShape.circle,
+                          border: Border.all(
+                            color: Colors.white.withOpacity(0.3),
+                            width: 1,
+                          ),
+                        ),
+                        child: const Icon(
+                          Icons.arrow_forward_ios,
+                          color: Colors.white,
+                          size: 24,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+
+            // Bottom indicator
+            Positioned(
+              bottom: 40,
+              left: 0,
+              right: 0,
+              child: Center(
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 24,
+                    vertical: 12,
+                  ),
+                  decoration: BoxDecoration(
+                    color: Colors.black.withOpacity(0.6),
+                    borderRadius: BorderRadius.circular(30),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        controller.isVideo(currentIndex)
+                            ? Icons.videocam
+                            : Icons.gesture,
+                        color: Colors.white,
+                        size: 20,
+                      ),
+                      const SizedBox(width: 8),
+                      Text(
+                        controller.isVideo(currentIndex)
+                            ? ' ${currentIndex - controller.images.length + 1}/${controller.videos.length}'
+                            : '${currentIndex + 1}/${controller.totalItems}',
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ),
             ),
           ],
-          Positioned(
-            bottom: 40,
-            left: 0,
-            right: 0,
-            child: Center(
-              child: Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 24,
-                  vertical: 12,
-                ),
-                decoration: BoxDecoration(
-                  color: Colors.black.withOpacity(0.6),
-                  borderRadius: BorderRadius.circular(30),
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Icon(
-                      isVideo ? Icons.videocam : Icons.gesture,
-                      color: Colors.white,
-                      size: 20,
-                    ),
-                    const SizedBox(width: 8),
-                    Text(
-                      isVideo
-                          ? 'Video ${currentIndex - controller.images.length + 1}/${controller.videos.length}'
-                          : 'Pinch untuk zoom • ${currentIndex + 1}/${controller.totalItems}',
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
+        ),
+      );
+    });
   }
 
   Widget _buildFullscreenVideo(int index) {
