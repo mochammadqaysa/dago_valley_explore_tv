@@ -763,7 +763,7 @@ class ProductDetailPage extends GetView<DetailProductController> {
     });
   }
 
-  Widget _buildFullscreenOverlay(
+ Widget _buildFullscreenOverlay(
     BuildContext context,
     ThemeController themeController,
   ) {
@@ -777,7 +777,7 @@ class ProductDetailPage extends GetView<DetailProductController> {
             // PageView untuk swipe functionality
             PageView.builder(
               itemCount: controller.totalItems,
-              controller: PageController(initialPage: currentIndex),
+              controller: controller.pageController,
               onPageChanged: (index) {
                 // Pause video sebelumnya jika ada
                 if (controller.isVideo(currentIndex)) {
@@ -825,10 +825,10 @@ class ProductDetailPage extends GetView<DetailProductController> {
                   child: Container(
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.2),
+                      color: Colors.grey.withOpacity(0.5),
                       shape: BoxShape.circle,
                       border: Border.all(
-                        color: Colors.white.withOpacity(0.3),
+                        color: Colors.grey.withOpacity(0.6),
                         width: 1,
                       ),
                     ),
@@ -853,10 +853,7 @@ class ProductDetailPage extends GetView<DetailProductController> {
                     color: Colors.transparent,
                     child: InkWell(
                       onTap: () {
-                        final newIndex = currentIndex > 0
-                            ? currentIndex - 1
-                            : controller.totalItems - 1;
-                        controller.goToPage(newIndex);
+                        controller.previousPage();
                         controller.transformationController.value =
                             Matrix4.identity();
                       },
@@ -864,10 +861,10 @@ class ProductDetailPage extends GetView<DetailProductController> {
                       child: Container(
                         padding: const EdgeInsets.all(16),
                         decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.2),
+                          color: Colors.grey.withOpacity(0.5),
                           shape: BoxShape.circle,
                           border: Border.all(
-                            color: Colors.white.withOpacity(0.3),
+                            color: Colors.grey.withOpacity(0.6),
                             width: 1,
                           ),
                         ),
@@ -890,11 +887,7 @@ class ProductDetailPage extends GetView<DetailProductController> {
                     color: Colors.transparent,
                     child: InkWell(
                       onTap: () {
-                        final newIndex =
-                            currentIndex < controller.totalItems - 1
-                            ? currentIndex + 1
-                            : 0;
-                        controller.goToPage(newIndex);
+                        controller.nextPage();
                         controller.transformationController.value =
                             Matrix4.identity();
                       },
@@ -902,10 +895,10 @@ class ProductDetailPage extends GetView<DetailProductController> {
                       child: Container(
                         padding: const EdgeInsets.all(16),
                         decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.2),
+                          color: Colors.grey.withOpacity(0.5),
                           shape: BoxShape.circle,
                           border: Border.all(
-                            color: Colors.white.withOpacity(0.3),
+                            color: Colors.grey.withOpacity(0.6),
                             width: 1,
                           ),
                         ),

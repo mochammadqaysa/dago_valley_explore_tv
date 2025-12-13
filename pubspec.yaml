@@ -101,9 +101,22 @@ flutter:
     - assets/rumah/harmoni_106_112.mp4
     - assets/rumah/
     - assets/rumah/harmoni/harmoni_100_108/
+    - assets/rumah/harmoni/harmoni_106_112/
+    - assets/rumah/harmoni/harmoni_112_117/
     - assets/rumah/harmoni/harmoni_129_144/
     - assets/rumah/harmoni/harmoni_131_150/
+    - assets/rumah/harmoni/harmoni_131_169/
     - assets/rumah/harmoni/harmoni_140_108/
+    - assets/rumah/harmoni/harmoni_150_144/
+    - assets/rumah/foresta/foresta_144_190/
+    - assets/rumah/foresta/foresta_144_228/
+    - assets/rumah/foresta/foresta_193_228/
+    - assets/rumah/foresta/foresta_193_235/
+    - assets/rumah/foresta/foresta_220_228/
+    - assets/rumah/foresta/foresta_261_186/
+    - assets/rumah/tropica/tropica_110_60/
+    - assets/rumah/tropica/tropica_131_60/
+    - assets/rumah/tropica/tropica_122_90/
     - assets/promo/
     - assets/event/
     - assets/walkthrough/

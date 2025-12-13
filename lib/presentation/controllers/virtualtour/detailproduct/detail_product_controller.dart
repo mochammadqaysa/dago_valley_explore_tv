@@ -12,6 +12,9 @@ class DetailProductController extends GetxController {
   // Carousel controller
   final carouselController = cs.CarouselSliderController();
 
+  // PageController untuk fullscreen overlay
+  PageController? pageController;
+
   // Observable untuk index aktif
   final currentIndex = 0.obs;
 
@@ -406,12 +409,55 @@ class DetailProductController extends GetxController {
   // Open fullscreen
   void openFullscreen() {
     isFullscreen.value = true;
+    // Initialize PageController dengan index saat ini
+    pageController = PageController(initialPage: currentIndex.value);
   }
 
   // Close fullscreen
   void closeFullscreen() {
     isFullscreen.value = false;
     transformationController.value = Matrix4.identity();
+    // Dispose PageController
+    pageController?.dispose();
+    pageController = null;
+  }
+
+  // Navigate to next page
+  void nextPage() {
+    final newIndex = currentIndex.value < totalItems - 1
+        ? currentIndex.value + 1
+        : 0;
+
+    // Update PageController jika fullscreen
+    if (isFullscreen.value && pageController != null) {
+      pageController!.animateToPage(
+        newIndex,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+      );
+    }
+
+    // Update carousel utama
+    goToPage(newIndex);
+  }
+
+  // Navigate to previous page
+  void previousPage() {
+    final newIndex = currentIndex.value > 0
+        ? currentIndex.value - 1
+        : totalItems - 1;
+
+    // Update PageController jika fullscreen
+    if (isFullscreen.value && pageController != null) {
+      pageController!.animateToPage(
+        newIndex,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+      );
+    }
+
+    // Update carousel utama
+    goToPage(newIndex);
   }
 
   // Handle booking
