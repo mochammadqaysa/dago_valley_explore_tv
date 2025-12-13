@@ -93,7 +93,8 @@ class ProductCard extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        houseModel.type,
+                        houseModel.type +
+                            (houseModel.isAddendum ? " (Add)" : ""),
                         style: const TextStyle(
                           fontSize: 8,
                           fontWeight: FontWeight.w600,
