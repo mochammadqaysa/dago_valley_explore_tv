@@ -126,6 +126,30 @@ class _VirtualtourPageState extends State<VirtualtourPage>
                         ],
                       ),
                     ),
+                    SizedBox(width: 16),
+                    ElevatedButton.icon(
+                      onPressed: () => _showPanoramicView(),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppColors.primary,
+                        foregroundColor: Colors.white,
+                        elevation: 2,
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 8,
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                      icon: const Icon(Icons.threesixty_rounded, size: 18),
+                      label: const Text(
+                        "Jelajahi 360 Panoramic View",
+                        style: TextStyle(
+                          fontSize: 11,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -147,30 +171,30 @@ class _VirtualtourPageState extends State<VirtualtourPage>
           ),
 
           // ✅ FAB YANG SUDAH DIKURANGI UKURANNYA
-          floatingActionButton: Container(
-            margin: const EdgeInsets.only(top: 15),
-            child: SizedBox(
-              height: 36, // ← Kurangi tinggi dari default (~48-56)
-              child: FloatingActionButton.extended(
-                onPressed: () => _showPanoramicView(),
-                backgroundColor: AppColors.primary,
-                elevation: 4, // ← Opsional: kurangi elevation juga
-                label: Text(
-                  "Jelajahi 360 Panoramic View",
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 12, // ← Kurangi ukuran font
-                  ),
-                ),
-                icon: Icon(
-                  Icons.threesixty_rounded,
-                  color: Colors.white,
-                  size: 20, // ← Kurangi ukuran icon
-                ),
-              ),
-            ),
-          ),
-          floatingActionButtonLocation: FloatingActionButtonLocation.centerTop,
+          // floatingActionButton: Container(
+          //   margin: const EdgeInsets.only(top: 15),
+          //   child: SizedBox(
+          //     height: 36, // ← Kurangi tinggi dari default (~48-56)
+          //     child: FloatingActionButton.extended(
+          //       onPressed: () => _showPanoramicView(),
+          //       backgroundColor: AppColors.primary,
+          //       elevation: 4, // ← Opsional: kurangi elevation juga
+          //       label: Text(
+          //         "Jelajahi 360 Panoramic View",
+          //         style: TextStyle(
+          //           color: Colors.white,
+          //           fontSize: 12, // ← Kurangi ukuran font
+          //         ),
+          //       ),
+          //       icon: Icon(
+          //         Icons.threesixty_rounded,
+          //         color: Colors.white,
+          //         size: 20, // ← Kurangi ukuran icon
+          //       ),
+          //     ),
+          //   ),
+          // ),
+          // floatingActionButtonLocation: FloatingActionButtonLocation.centerTop,
         ),
       );
     });
