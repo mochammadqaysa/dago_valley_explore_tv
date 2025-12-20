@@ -214,8 +214,13 @@ class ProductDetailPage extends GetView<DetailProductController> {
           if (controller.videos.isNotEmpty)
             InkWell(
               onTap: () {
-                final firstVideoIndex = controller.images.length;
-                controller.carouselController.animateToPage(firstVideoIndex);
+                if (controller.images.isNotEmpty) {
+                  controller.carouselController.animateToPage(
+                    controller.images.length - 1,
+                  );
+                } else {
+                  controller.carouselController.animateToPage(0);
+                }
               },
               child: Container(
                 margin: const EdgeInsets.only(left: 16),
@@ -254,6 +259,13 @@ class ProductDetailPage extends GetView<DetailProductController> {
     ThemeController themeController,
     Function(int) scrollThumbnailToIndex,
   ) {
+    int itemCount = controller.totalItems;
+    int startIndex = 0;
+    if (controller.images.isNotEmpty) {
+      itemCount = controller.totalItems - 1;
+      startIndex = 1;
+    }
+
     return Container(
       margin: const EdgeInsets.only(bottom: 20),
       decoration: BoxDecoration(borderRadius: BorderRadius.circular(20)),
@@ -261,7 +273,7 @@ class ProductDetailPage extends GetView<DetailProductController> {
         borderRadius: BorderRadius.circular(20),
         child: CarouselSlider.builder(
           carouselController: controller.carouselController,
-          itemCount: controller.totalItems,
+          itemCount: itemCount,
           options: CarouselOptions(
             viewportFraction: 1.0,
             enlargeCenterPage: false,
@@ -270,17 +282,18 @@ class ProductDetailPage extends GetView<DetailProductController> {
             scrollPhysics: const PageScrollPhysics(),
             pageSnapping: true,
             onPageChanged: (index, reason) {
-              controller.setCurrentIndex(index);
+              controller.setCurrentIndex(index + startIndex);
               scrollThumbnailToIndex(index);
             },
           ),
           itemBuilder: (context, index, realIndex) {
-            final isVideo = controller.isVideo(index);
+            final dataIndex = index + startIndex;
+            final isVideo = controller.isVideo(dataIndex);
 
             if (isVideo) {
-              return _buildVideoItem(index, themeController);
+              return _buildVideoItem(dataIndex, themeController);
             } else {
-              return _buildImageItem(index, themeController);
+              return _buildImageItem(dataIndex, themeController);
             }
           },
         ),
@@ -644,16 +657,24 @@ class ProductDetailPage extends GetView<DetailProductController> {
     return Obx(() {
       final currentIdx = controller.currentIndex.value;
 
+      int itemCount = controller.totalItems;
+      int startIndex = 0;
+      if (controller.images.isNotEmpty) {
+        itemCount = controller.totalItems - 1;
+        startIndex = 1;
+      }
+
       return Container(
         height: 120,
         padding: const EdgeInsets.symmetric(vertical: 10),
         child: ListView.builder(
           controller: thumbnailScrollController,
           scrollDirection: Axis.horizontal,
-          itemCount: controller.totalItems,
+          itemCount: itemCount,
           itemBuilder: (context, index) {
-            final isActive = index == currentIdx;
-            final isVideo = controller.isVideo(index);
+            final dataIndex = index + startIndex;
+            final isActive = dataIndex == currentIdx;
+            final isVideo = controller.isVideo(dataIndex);
 
             return GestureDetector(
               onTap: () {
@@ -707,7 +728,7 @@ class ProductDetailPage extends GetView<DetailProductController> {
                                   ),
                                 )
                               : Image.asset(
-                                  controller.images[index],
+                                  controller.images[dataIndex],
                                   fit: BoxFit.cover,
                                   errorBuilder: (context, error, stackTrace) {
                                     return Container(
@@ -763,12 +784,19 @@ class ProductDetailPage extends GetView<DetailProductController> {
     });
   }
 
- Widget _buildFullscreenOverlay(
+  Widget _buildFullscreenOverlay(
     BuildContext context,
     ThemeController themeController,
   ) {
     return Obx(() {
       final currentIndex = controller.currentIndex.value;
+
+      int itemCount = controller.totalItems;
+      int startIndex = 0;
+      if (controller.images.isNotEmpty) {
+        itemCount = controller.totalItems - 1;
+        startIndex = 1;
+      }
 
       return Material(
         color: Colors.black.withOpacity(0.95),
@@ -776,7 +804,7 @@ class ProductDetailPage extends GetView<DetailProductController> {
           children: [
             // PageView untuk swipe functionality
             PageView.builder(
-              itemCount: controller.totalItems,
+              itemCount: itemCount,
               controller: controller.pageController,
               onPageChanged: (index) {
                 // Pause video sebelumnya jika ada
@@ -784,19 +812,26 @@ class ProductDetailPage extends GetView<DetailProductController> {
                   controller.pauseVideo(currentIndex);
                 }
 
+                final dataIndex = index + startIndex;
+
                 // Update index dan reset zoom
-                controller.setCurrentIndex(index);
+                controller.setCurrentIndex(dataIndex);
                 controller.transformationController.value = Matrix4.identity();
 
                 // Update carousel utama juga
+                // Note: carouselController expects Visual Index if we modified the carousel
+                // But controller.goToPage implementation calls animateToPage(index)
+                // In main carousel we have Visual Indices.
+                // So passing 'index' (Visual) is correct for Main Carousel too!
                 controller.goToPage(index);
               },
               itemBuilder: (context, index) {
-                final isVideo = controller.isVideo(index);
+                final dataIndex = index + startIndex;
+                final isVideo = controller.isVideo(dataIndex);
 
                 return Center(
                   child: isVideo
-                      ? _buildFullscreenVideo(index)
+                      ? _buildFullscreenVideo(dataIndex)
                       : InteractiveViewer(
                           transformationController:
                               controller.transformationController,
@@ -805,7 +840,7 @@ class ProductDetailPage extends GetView<DetailProductController> {
                           panEnabled: true,
                           scaleEnabled: true,
                           child: Image.asset(
-                            controller.images[index],
+                            controller.images[dataIndex],
                             fit: BoxFit.contain,
                           ),
                         ),
@@ -943,7 +978,7 @@ class ProductDetailPage extends GetView<DetailProductController> {
                       Text(
                         controller.isVideo(currentIndex)
                             ? ' ${currentIndex - controller.images.length + 1}/${controller.videos.length}'
-                            : '${currentIndex + 1}/${controller.totalItems}',
+                            : '${currentIndex + 1 - (controller.images.isNotEmpty ? 1 : 0)}/${controller.totalItems - (controller.images.isNotEmpty ? 1 : 0)}',
                         style: const TextStyle(
                           color: Colors.white,
                           fontSize: 14,

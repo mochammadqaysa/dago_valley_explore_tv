@@ -410,7 +410,12 @@ class DetailProductController extends GetxController {
   void openFullscreen() {
     isFullscreen.value = true;
     // Initialize PageController dengan index saat ini
-    pageController = PageController(initialPage: currentIndex.value);
+    // Offset index jika images tidak kosong (karena index 0 diskip di UI)
+    int initialPage = currentIndex.value;
+    if (images.isNotEmpty && initialPage > 0) {
+      initialPage -= 1;
+    }
+    pageController = PageController(initialPage: initialPage);
   }
 
   // Close fullscreen
