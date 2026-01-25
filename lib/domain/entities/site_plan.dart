@@ -7,6 +7,7 @@ class SitePlan {
   final String mapUrl;
   final String fasumUrl;
   final String timelineProgressUrl;
+  final String? timelineProgressTahap2Url;
   final String createdAt;
   final String updatedAt;
 
@@ -19,6 +20,7 @@ class SitePlan {
     required this.mapUrl,
     required this.fasumUrl,
     required this.timelineProgressUrl,
+    this.timelineProgressTahap2Url,
     required this.createdAt,
     required this.updatedAt,
   });
@@ -32,6 +34,7 @@ class SitePlan {
     mapUrl: json['mapUrl'],
     fasumUrl: json['fasumUrl'],
     timelineProgressUrl: json['timelineProgressUrl'],
+    timelineProgressTahap2Url: json['timelineProgressTahap2Url'],
     createdAt: json['created_at'],
     updatedAt: json['updated_at'],
   );
@@ -45,6 +48,7 @@ class SitePlan {
     "mapUrl": mapUrl,
     "fasumUrl": fasumUrl,
     "timelineProgressUrl": timelineProgressUrl,
+    "timelineProgressTahap2Url": timelineProgressTahap2Url,
     "created_at": createdAt,
     "updated_at": updatedAt,
   };

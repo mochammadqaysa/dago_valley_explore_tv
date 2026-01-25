@@ -46,7 +46,7 @@ const List<HouseModel> houseModels = [
     jumlahUnit: 4,
     hargaCash: 2900000000,
     gambar: [
-      "assets/rumah/harmoni/harmoni_100_108/Sampul.jpg",
+      "assets/rumah/harmoni/harmoni_100_108/Sampul.png",
       "assets/rumah/harmoni/harmoni_100_108/Slide 1.jpg",
       "assets/rumah/harmoni/harmoni_100_108/Slide 2.jpg",
       "assets/rumah/harmoni/harmoni_100_108/Slide 3.jpg",
@@ -71,7 +71,6 @@ const List<HouseModel> houseModels = [
       "assets/rumah/harmoni/harmoni_100_108/Slide 23.png",
       "assets/rumah/harmoni/harmoni_100_108/Slide 24.png",
       "assets/rumah/harmoni/harmoni_100_108/Slide 25.png",
-      "assets/rumah/harmoni/harmoni_100_108/Slide 26.jpg",
     ],
     video: ["assets/rumah/harmoni_106_112.mp4"],
     cicilanData: {
@@ -269,7 +268,6 @@ const List<HouseModel> houseModels = [
       "assets/rumah/harmoni/harmoni_129_144/Slide 15.png",
       "assets/rumah/harmoni/harmoni_129_144/Slide 16.png",
       "assets/rumah/harmoni/harmoni_129_144/Slide 17.png",
-      "assets/rumah/harmoni/harmoni_129_144/Slide 18.jpg",
     ],
 
     cicilanData: {
@@ -358,7 +356,6 @@ const List<HouseModel> houseModels = [
       "assets/rumah/harmoni/harmoni_131_150/Slide 15.png",
       "assets/rumah/harmoni/harmoni_131_150/Slide 16.png",
       "assets/rumah/harmoni/harmoni_131_150/Slide 17.png",
-      "assets/rumah/harmoni/harmoni_131_150/Slide 18.jpg",
     ],
 
     cicilanData: {
@@ -445,7 +442,6 @@ const List<HouseModel> houseModels = [
       "assets/rumah/foresta/foresta_144_190/Slide 4.jpg",
       "assets/rumah/foresta/foresta_144_190/Slide 5.jpg",
       "assets/rumah/foresta/foresta_144_190/Slide 6.jpg",
-      "assets/rumah/foresta/foresta_144_190/Slide 7.jpg",
     ],
 
     cicilanData: {
@@ -572,7 +568,6 @@ const List<HouseModel> houseModels = [
       "assets/rumah/foresta/foresta_193_228/slide 14.jpg",
       "assets/rumah/foresta/foresta_193_228/slide 15.jpg",
       "assets/rumah/foresta/foresta_193_228/slide 16.jpg",
-      "assets/rumah/foresta/foresta_193_228/slide 17.jpg",
     ],
 
     cicilanData: {
@@ -689,12 +684,11 @@ const List<HouseModel> houseModels = [
     jumlahUnit: 2,
     hargaCash: 0,
     gambar: [
-      "assets/rumah/foresta/foresta_261_186/Sampul dan slide 1.png",
+      "assets/rumah/foresta/foresta_261_186/Sampul.png",
       "assets/rumah/foresta/foresta_261_186/Slide 1.jpg",
       "assets/rumah/foresta/foresta_261_186/Slide 2.jpg",
       "assets/rumah/foresta/foresta_261_186/Slide 3.jpg",
       "assets/rumah/foresta/foresta_261_186/Slide 4.jpg",
-      "assets/rumah/foresta/foresta_261_186/Slide 5.jpg",
     ],
 
     cicilanData: {
@@ -732,9 +726,9 @@ const List<HouseModel> houseModels = [
       "assets/rumah/tropica/tropica_110_60/Slide 1.jpg",
       "assets/rumah/tropica/tropica_110_60/Slide 2.png",
       "assets/rumah/tropica/tropica_110_60/Slide 3.png",
+      "assets/rumah/tropica/tropica_110_60/Slide 4.jpg",
       "assets/rumah/tropica/tropica_110_60/Slide 5.jpg",
       "assets/rumah/tropica/tropica_110_60/Slide 6.jpg",
-      "assets/rumah/tropica/tropica_110_60/Slide 7.jpg",
     ],
 
     cicilanData: {

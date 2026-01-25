@@ -46,7 +46,7 @@ class _CashcalculatorPageState extends State<CashcalculatorPage> {
     if (paymentMethod == PaymentMethod.kprSyariah) {
       return [5, 10, 15, 20];
     } else {
-      return [1, 2];
+      return [1, 2, 3];
     }
   }
 
@@ -393,7 +393,7 @@ class _CashcalculatorPageState extends State<CashcalculatorPage> {
                                         onChanged: (v) {
                                           setState(() {
                                             paymentMethod = v!;
-                                            tenor = 2;
+                                            tenor = 3;
                                             marginPersen = marginDeveloper;
                                             customDp = null;
                                             _dpController.clear();

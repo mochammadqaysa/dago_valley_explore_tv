@@ -1,7 +1,10 @@
 import 'dart:io';
+import 'dart:math' as math;
+import 'package:flutter/gestures.dart';
 
 import 'package:dago_valley_explore_tv/app/config/app_colors.dart';
 import 'package:dago_valley_explore_tv/app/services/local_storage.dart';
+import 'package:dago_valley_explore_tv/presentation/components/tinyplanet/tiny_planet.dart';
 import 'package:dago_valley_explore_tv/presentation/controllers/siteplan/siteplan_controller.dart';
 import 'package:dago_valley_explore_tv/presentation/controllers/theme/theme_controller.dart';
 import 'package:flutter/foundation.dart';
@@ -18,24 +21,30 @@ class SiteplanPage extends StatefulWidget {
 }
 
 class _SiteplanPageState extends State<SiteplanPage>
-    with SingleTickerProviderStateMixin {
+    with TickerProviderStateMixin {
   // keep using controller via Get
   final SiteplanController controller = Get.find<SiteplanController>();
 
   // Tab controller for "Siteplan Status" pills (Tahap 1 / Tahap 2)
   late final TabController _statusTabController;
+  // Tab controller for "Timeline Progress" pills (Tahap 1 / Tahap 2)
+  late final TabController _timelineTabController;
 
   @override
   void initState() {
     super.initState();
     _statusTabController = TabController(length: 2, vsync: this);
+    _timelineTabController = TabController(length: 2, vsync: this);
+
     // Optional: start on tahap 1 (index 0)
     _statusTabController.index = 0;
+    _timelineTabController.index = 0;
   }
 
   @override
   void dispose() {
     _statusTabController.dispose();
+    _timelineTabController.dispose();
     super.dispose();
   }
 
@@ -79,8 +88,8 @@ class _SiteplanPageState extends State<SiteplanPage>
             segments: SiteplanTabType.values.map((tab) {
               return ButtonSegment<SiteplanTabType>(
                 value: tab,
-                label: Text(tab.label, style: const TextStyle(fontSize: 11)),
-                icon: Icon(tab.icon, size: 12),
+                label: Text(tab.label),
+                icon: Icon(tab.icon, size: 20),
               );
             }).toList(),
             selected: {controller.selectedTab},
@@ -292,7 +301,7 @@ class _SiteplanPageState extends State<SiteplanPage>
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: SizedBox(
         width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.height * 0.759,
+        height: MediaQuery.of(context).size.height * 0.895,
         child: ClipRRect(
           borderRadius: BorderRadius.circular(12),
           child: Container(
@@ -302,7 +311,7 @@ class _SiteplanPageState extends State<SiteplanPage>
                   ? Colors.grey[900]
                   : Colors.grey[200],
               child: _buildZoomableImage(
-                imageUrl: controller.firstSiteplan.mapUrl,
+                imageUrl: controller.firstSiteplan?.mapUrl ?? '',
                 fit: BoxFit.fitWidth,
                 themeController: themeController,
               ),
@@ -319,7 +328,7 @@ class _SiteplanPageState extends State<SiteplanPage>
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: SizedBox(
         width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.height * 0.759,
+        height: MediaQuery.of(context).size.height * 0.895,
         child: ClipRRect(
           borderRadius: BorderRadius.circular(12),
           child: Container(
@@ -329,7 +338,7 @@ class _SiteplanPageState extends State<SiteplanPage>
                   ? Colors.grey[900]
                   : Colors.grey[200],
               child: _buildZoomableImage(
-                imageUrl: controller.firstSiteplan.fasumUrl,
+                imageUrl: controller.firstSiteplan?.fasumUrl ?? '',
                 fit: BoxFit.contain,
                 themeController: themeController,
               ),
@@ -340,29 +349,106 @@ class _SiteplanPageState extends State<SiteplanPage>
     );
   }
 
-  // Timeline Progress Tab Content
+  // Timeline Progress Tab Content - with pills for Tahap 1 / Tahap 2
   Widget _buildTimelineProgressTab(
     BuildContext context,
     ThemeController themeController,
   ) {
+    final isDark = themeController.isDarkMode;
+    final tahap1Url = controller.firstSiteplan?.timelineProgressUrl;
+    final tahap2Url = controller.firstSiteplan?.timelineProgressTahap2Url;
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: SizedBox(
         width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.height * 0.759,
+        height: MediaQuery.of(context).size.height * 0.895,
         child: ClipRRect(
           borderRadius: BorderRadius.circular(12),
           child: Container(
-            color: themeController.isDarkMode ? Colors.black : Colors.white,
-            child: Container(
-              color: themeController.isDarkMode
-                  ? Colors.grey[900]
-                  : Colors.grey[200],
-              child: _buildZoomableImage(
-                imageUrl: controller.firstSiteplan.timelineProgressUrl,
-                fit: BoxFit.contain,
-                themeController: themeController,
-              ),
+            color: isDark ? Colors.black : Colors.white,
+            child: Column(
+              children: [
+                // Pills / TabBar
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 12,
+                    horizontal: 12,
+                  ),
+                  child: Container(
+                    width: 260,
+                    height: 34,
+                    decoration: BoxDecoration(
+                      color: isDark ? Colors.grey[850] : Colors.grey[200],
+                      borderRadius: BorderRadius.circular(25),
+                    ),
+                    child: TabBar(
+                      controller: _timelineTabController,
+                      indicator: BoxDecoration(
+                        color: AppColors.primary,
+                        borderRadius: BorderRadius.circular(25),
+                      ),
+                      indicatorSize: TabBarIndicatorSize.tab,
+                      labelColor: Colors.white,
+                      unselectedLabelColor: isDark
+                          ? Colors.white70
+                          : Colors.black54,
+                      labelStyle: const TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      tabs: [
+                        Tab(text: 'Tahap 1'),
+                        Tab(text: 'Tahap 2'),
+                      ],
+                    ),
+                  ),
+                ),
+
+                // Content area
+                Expanded(
+                  child: TabBarView(
+                    controller: _timelineTabController,
+                    children: [
+                      // Tahap 1 - existing image
+                      Container(
+                        color: isDark ? Colors.grey[900] : Colors.grey[200],
+                        child: _buildZoomableImage(
+                          imageUrl: tahap1Url ?? '',
+                          fit: BoxFit.contain,
+                          themeController: themeController,
+                        ),
+                      ),
+
+                      // Tahap 2 - timelineProgressTahap2Url (fallback to placeholder if empty)
+                      Container(
+                        color: isDark ? Colors.grey[900] : Colors.grey[200],
+                        child: (tahap2Url?.isNotEmpty ?? false)
+                            ? _buildZoomableImage(
+                                imageUrl: tahap2Url ?? '',
+                                fit: BoxFit.contain,
+                                themeController: themeController,
+                              )
+                            : Center(
+                                child: Padding(
+                                  padding: const EdgeInsets.all(24.0),
+                                  child: Text(
+                                    'No image available for Tahap 2',
+                                    style: TextStyle(
+                                      color: isDark
+                                          ? Colors.white70
+                                          : Colors.black54,
+                                      fontSize: 14,
+                                    ),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ),
+                              ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ),
           ),
         ),
@@ -376,14 +462,14 @@ class _SiteplanPageState extends State<SiteplanPage>
     ThemeController themeController,
   ) {
     final isDark = themeController.isDarkMode;
-    final tahap1Url = controller.firstSiteplan.imageUrl;
-    final tahap2Url = controller.firstSiteplan.imageTahap2Url;
+    final tahap1Url = controller.firstSiteplan?.imageUrl;
+    final tahap2Url = controller.firstSiteplan?.imageTahap2Url;
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: SizedBox(
         width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.height * 0.759,
+        height: MediaQuery.of(context).size.height * 0.895,
         child: ClipRRect(
           borderRadius: BorderRadius.circular(12),
           child: Container(
@@ -435,7 +521,7 @@ class _SiteplanPageState extends State<SiteplanPage>
                       Container(
                         color: isDark ? Colors.grey[900] : Colors.grey[200],
                         child: _buildZoomableImage(
-                          imageUrl: tahap1Url,
+                          imageUrl: tahap1Url ?? '',
                           fit: BoxFit.contain,
                           themeController: themeController,
                         ),
@@ -444,9 +530,9 @@ class _SiteplanPageState extends State<SiteplanPage>
                       // Tahap 2 - imageTahap2Url (fallback to placeholder if empty)
                       Container(
                         color: isDark ? Colors.grey[900] : Colors.grey[200],
-                        child: (tahap2Url.isNotEmpty)
+                        child: (tahap2Url?.isNotEmpty ?? false)
                             ? _buildZoomableImage(
-                                imageUrl: tahap2Url,
+                                imageUrl: tahap2Url ?? '',
                                 fit: BoxFit.contain,
                                 themeController: themeController,
                               )
@@ -486,19 +572,12 @@ class _SiteplanPageState extends State<SiteplanPage>
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: SizedBox(
         width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.height * 0.759,
+        height: MediaQuery.of(context).size.height * 0.895,
         child: ClipRRect(
           borderRadius: BorderRadius.circular(12),
           child: Container(
             color: themeController.isDarkMode ? Colors.black : Colors.white,
-            child: _buildComingSoonWidget(
-              context,
-              themeController,
-              icon: Icons.construction,
-              title: 'Kawasan 360° Coming Soon',
-              description:
-                  'Explore the 360-degree view of the kawasan soon.  Stay tuned for updates!',
-            ),
+            child: _buildPanoramaViewer(),
           ),
         ),
       ),
@@ -555,33 +634,368 @@ class _SiteplanPageState extends State<SiteplanPage>
   // Build panorama viewer
   Widget _buildPanoramaViewer() {
     return Obx(() {
-      try {
-        return PanoramaViewer(
-          animSpeed: 0.1,
-          sensorControl: controller.isDesktop
-              ? SensorControl.none
-              : SensorControl.orientation,
-          onViewChanged: controller.onViewChanged,
-          onTap: controller.onPanoramaTap,
-          hotspots: [
-            Hotspot(
-              latitude: 0.0,
-              longitude: 0.0,
-              width: 90,
-              height: 80,
-              widget: _buildHotspotButton(
-                text: "Next",
-                icon: Icons.open_in_new,
-                onPressed: controller.goToNextPanorama,
+      final isExploration = controller.isExplorationMode.value;
+      final isTransitioning = controller.isTransitioning.value;
+      final rotation = controller.planetRotation.value;
+      final currentPanoIndex =
+          controller.panoId; // Ambil index aktif untuk highlight
+
+      return AnimatedBuilder(
+        animation: controller.animController,
+        builder: (context, child) {
+          // SCENARIO 1: Gunakan variabel lokal 'isExploration'
+          if (isExploration) {
+            return Stack(
+              children: [
+                // 1. Panorama Viewer Utama
+                Listener(
+                  onPointerSignal: (event) {
+                    if (event is PointerScrollEvent) {
+                      // Scroll wheel: dy > 0 (scroll down) -> Zoom Out?
+                      // dy < 0 (scroll up) -> Zoom In
+                      final delta = event.scrollDelta.dy;
+                      if (delta < 0) {
+                        controller.handleZoom(0.1);
+                      } else {
+                        controller.handleZoom(-0.1);
+                      }
+                    }
+                    if (event is PointerScaleEvent) {
+                      // Trackpad pinch
+                      if (event.scale > 1.0) {
+                        controller.handleZoom(0.05); // Zoom In
+                      } else if (event.scale < 1.0) {
+                        controller.handleZoom(-0.05); // Zoom Out
+                      }
+                    }
+                  },
+                  child: PanoramaViewer(
+                    latitude: controller.initialPanoLat,
+                    longitude: controller.initialPanoLon,
+                    zoom: controller.panoZoom.value,
+                    interactive: true,
+                    animSpeed: 0,
+                    sensorControl: SensorControl.none,
+                    child: controller.currentPanoAsset,
+                    onViewChanged: controller.onViewChanged,
+                    hotspots: controller.hotspots
+                        .map(
+                          (h) => Hotspot(
+                            latitude: h.latitude,
+                            longitude: h.longitude,
+                            width: 90.0,
+                            height: 90.0,
+                            widget: GestureDetector(
+                              onTap: () =>
+                                  controller.onHotspotTap(h.targetIndex),
+                              child: Column(
+                                children: [
+                                  Image.asset(
+                                    'assets/vtourskin_hotspot0.png',
+                                    width: 40,
+                                    height: 40,
+                                  ),
+                                  const SizedBox(height: 4),
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 6,
+                                      vertical: 2,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: Colors.black54,
+                                      borderRadius: BorderRadius.circular(4),
+                                    ),
+                                    child: Text(
+                                      h.name,
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        )
+                        .toList(),
+                  ),
+                ),
+
+                // 2.A Zoom Controls (Tombol Zoom In/Out)
+                Positioned(
+                  bottom: 120, // Di atas panel bawah (jika ada) atau sesuaikan
+                  right: 20,
+                  child: Column(
+                    children: [
+                      FloatingActionButton.small(
+                        heroTag: 'pano_zoom_in',
+                        onPressed: controller.zoomIn,
+                        backgroundColor: Colors.white.withOpacity(0.8),
+                        child: const Icon(Icons.add, color: Colors.black),
+                      ),
+                      const SizedBox(height: 12),
+                      FloatingActionButton.small(
+                        heroTag: 'pano_zoom_out',
+                        onPressed: controller.zoomOut,
+                        backgroundColor: Colors.white.withOpacity(0.8),
+                        child: const Icon(Icons.remove, color: Colors.black),
+                      ),
+                    ],
+                  ),
+                ),
+
+                // 3. PANEL SAMPING (SIDEBAR) BARU
+                Obx(
+                  () => AnimatedPositioned(
+                    duration: const Duration(milliseconds: 300),
+                    curve: Curves.easeInOut,
+                    left: controller.isSidebarVisible.value
+                        ? 20
+                        : -280, // Slide out
+                    top: 100,
+                    bottom: 100,
+                    width: 260,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 20,
+                        horizontal: 16,
+                      ), // ... existing decoration
+                      decoration: BoxDecoration(
+                        color: AppColors.primary.withOpacity(
+                          0.9,
+                        ), // Sedikit transparan agar elegan
+                        borderRadius: BorderRadius.circular(
+                          24,
+                        ), // Rounded sudut
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.3),
+                            blurRadius: 10,
+                            offset: const Offset(2, 2),
+                          ),
+                        ],
+                      ),
+                      child: Column(
+                        // ... existing contents
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          // Header kecil (Opsional)
+                          Padding(
+                            padding: const EdgeInsets.only(left: 8, bottom: 16),
+                            child: Text(
+                              "Locations",
+                              style: TextStyle(
+                                color: Colors.white.withOpacity(0.6),
+                                fontSize: 12,
+                                fontWeight: FontWeight.bold,
+                                letterSpacing: 1.2,
+                              ),
+                            ),
+                          ),
+
+                          // List Panorama
+                          Expanded(
+                            child: ListView.separated(
+                              itemCount: controller.panoAssets.length,
+                              separatorBuilder: (context, index) =>
+                                  const SizedBox(height: 16),
+                              itemBuilder: (context, index) {
+                                final isSelected = currentPanoIndex == index;
+                                // Ambil label dari controller, fallback jika index out of bound
+                                final label =
+                                    (index < controller.panoLabels.length)
+                                    ? controller.panoLabels[index]
+                                    : 'Location ${index + 1}';
+
+                                return GestureDetector(
+                                  onTap: () => controller.selectPanorama(index),
+                                  child: AnimatedContainer(
+                                    duration: const Duration(milliseconds: 300),
+                                    padding: const EdgeInsets.all(8),
+                                    decoration: BoxDecoration(
+                                      color: isSelected
+                                          ? Colors.white.withOpacity(
+                                              0.2,
+                                            ) // Highlight bg jika dipilih
+                                          : Colors.transparent,
+                                      borderRadius: BorderRadius.circular(16),
+                                    ),
+                                    child: Row(
+                                      children: [
+                                        // 1. THUMBNAIL BULAT
+                                        Container(
+                                          width: 48,
+                                          height: 48,
+                                          decoration: BoxDecoration(
+                                            shape: BoxShape.circle,
+                                            border: Border.all(
+                                              color: isSelected
+                                                  ? Colors.white
+                                                  : Colors.transparent,
+                                              width: 2,
+                                            ),
+                                            boxShadow: [
+                                              if (isSelected)
+                                                BoxShadow(
+                                                  color: Colors.black26,
+                                                  blurRadius: 4,
+                                                ),
+                                            ],
+                                          ),
+                                          child: ClipOval(
+                                            child: Stack(
+                                              fit: StackFit.expand,
+                                              children: [
+                                                controller
+                                                    .panoAssets[index], // Gambar
+                                                if (!isSelected) // Gelapkan yang tidak aktif
+                                                  Container(
+                                                    color: Colors.black
+                                                        .withOpacity(0.3),
+                                                  ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+
+                                        const SizedBox(
+                                          width: 12,
+                                        ), // Jarak spasi
+                                        // 2. CAPTION TEKS
+                                        Expanded(
+                                          child: Text(
+                                            label,
+                                            style: TextStyle(
+                                              color: isSelected
+                                                  ? Colors.white
+                                                  : Colors.white70,
+                                              fontWeight: isSelected
+                                                  ? FontWeight.bold
+                                                  : FontWeight.normal,
+                                              fontSize: 14,
+                                            ),
+                                            maxLines: 2,
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+
+                // 4. Sidebar Toggle Button
+                Obx(
+                  () => AnimatedPositioned(
+                    duration: const Duration(milliseconds: 300),
+                    curve: Curves.easeInOut,
+                    // Visible: Sidebar ends at 20+260 = 280.
+                    // Button width 40. Centered on edge = 280 - 20 = 260.
+                    // Hidden: Sidebar at -280. Button should have margin. Let's use 20.
+                    left: controller.isSidebarVisible.value ? 260 : 20,
+                    top: 0,
+                    bottom: 0,
+                    width: 40,
+                    child: Center(
+                      child: GestureDetector(
+                        onTap: controller.toggleSidebar,
+                        child: Container(
+                          width: 40,
+                          height: 40,
+                          decoration: BoxDecoration(
+                            color: Colors.white.withOpacity(0.8),
+                            shape: BoxShape.circle,
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black26,
+                                blurRadius: 4,
+                                offset: Offset(2, 2),
+                              ),
+                            ],
+                          ),
+                          child: Icon(
+                            controller.isSidebarVisible.value
+                                ? Icons.chevron_left
+                                : Icons.chevron_right,
+                            color: Colors.black87,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+
+                // 4. White Fade Overlay (Scenario 1)
+                Obx(
+                  () => IgnorePointer(
+                    child: Container(
+                      color: Colors.white.withOpacity(
+                        controller.whiteOpacity.value,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            );
+          }
+
+          // SCENARIO 2: Masih Tiny Planet / Transisi (CODE LAMA TETAP SAMA)
+          return Stack(
+            // ... (Code scenario 2 tidak berubah) ...
+            fit: StackFit.expand,
+            children: [
+              GestureDetector(
+                onScaleStart: controller.onTinyPlanetScaleStart,
+                onScaleUpdate: controller.onTinyPlanetScaleUpdate,
+                child: TinyPlanetWidget(
+                  imageProvider: const AssetImage(
+                    'assets/pano_flip.jpg',
+                  ), // Pastikan ini sesuai
+                  rotation: rotation,
+                  scale: isTransitioning
+                      ? controller.scaleAnimation.value
+                      : controller.tinyPlanetScale.value,
+                ),
               ),
-            ),
-          ],
-          child: controller.currentPanoAsset,
-        );
-      } catch (e, st) {
-        debugPrint('PanoramaViewer failed: $e\n$st');
-        return _buildPanoramaFallback();
-      }
+              // LayoutBuilder untuk mendapatkan ukuran layar bagi projection
+              LayoutBuilder(
+                builder: (context, constraints) {
+                  return Stack(
+                    children: _buildTinyPlanetHotspots(
+                      constraints.maxWidth,
+                      constraints.maxHeight,
+                      rotation,
+                      isTransitioning
+                          ? controller.scaleAnimation.value
+                          : controller.tinyPlanetScale.value,
+                    ),
+                  );
+                },
+              ),
+
+              // 3. White Fade Overlay
+              Obx(
+                () => IgnorePointer(
+                  child: Container(
+                    color: Colors.white.withOpacity(
+                      controller.whiteOpacity.value,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          );
+        },
+      );
     });
   }
 
@@ -603,7 +1017,120 @@ class _SiteplanPageState extends State<SiteplanPage>
     );
   }
 
-  // Build hotspot button
+  List<Widget> _buildTinyPlanetHotspots(
+    double width,
+    double height,
+    double rotation,
+    double scale,
+  ) {
+    if (width <= 0 || height <= 0) return [];
+
+    return controller.hotspots.map((h) {
+      // Projection Math
+      // 1. Convert Lat/Lon to Radians
+      // Map Lat -90 (Center/SouthPole) to 0, +90 to PI?
+      // Based on shader flip assumption:
+      // Lat -90 -> Phi 0
+      // Lat 90 -> Phi PI
+      final phi = (h.latitude + 90) * (math.pi / 180.0);
+      final theta = h.longitude * (math.pi / 180.0);
+
+      // 2. Inverse Stereographic (Tiny Planet)
+      // r = scale * tan(phi / 2)
+      // Note: clip phi closely to PI to avoid infinity?
+      // If phi is PI (Lat 90), tan(PI/2) is infinity.
+      // But TinyPlanet usually sees -90 to approx 0 or so.
+      final r = scale * math.tan(phi / 2.0);
+
+      // 3. Angle on Screen
+      // Shader: theta = angle + rotation => angle = theta - rotation
+      final angle = theta - rotation;
+
+      // 4. Polar to Cartesian (UV Space approx -1 to 1)
+      // Note: Screen Y is usually down, but mathematical Y is up.
+      // Shader: atan(uv.y, uv.x).
+      // Flutter Coordinate: Top-Left is 0,0.
+      // We'll calculate standard Cartesian first (Right X+, Up Y+)
+      var u = r * math.cos(angle);
+      var v = r * math.sin(angle);
+
+      // 5. Aspect Ratio Correction (Reverse of Shader)
+      if (width > height) {
+        // Landscape: uv.x was multiplied by (w/h) in shader
+        // So we divide by (w/h) to get back to "0..1" equivalent space?
+        // Wait, 'u' calculated above corresponds to the *stretched* coordinate system?
+        // No, 'r' and 'angle' are derived FROM the stretched coordinates.
+        // So 'u' and 'v' ARE the stretched coordinates.
+        // We need to un-stretch to get back to normalized square bounds relative to screen dimensions.
+        u = u / (width / height);
+      } else {
+        // Portrait: uv.y was multiplied by (h/w)
+        v = v / (height / width);
+      }
+
+      // 6. Map to Screen Coordinates
+      // u, v are range approx -1..1 (if r=1).
+      // Center is 0,0
+      final cx = width / 2;
+      final cy = height / 2;
+
+      // Invert Y because screen Y is down
+      // But atan(y,x) in shader standard math likely assumes Y up.
+      // Or checking FlutterFragCoord...
+      // Let's assume standard Y-up for calculation, then invert for screen.
+      // Also need to check if 'r' exceeds visible bounds.
+      // If r is huge, it's behind the camera or far out.
+
+      final screenX = cx + (u * cx); // u * (width/2)
+      final screenY =
+          cy +
+          (v *
+              cy); // v * (height/2). Flip sign if needed. Assuming y+ is down in shader?
+      // Shader: uv = st * 2.0 - 1.0. st 0..1 (Top-Left 0,0).
+      // uv -1,-1 is Top-Left?
+      // atan(-1, -1) -> -135 deg (South West).
+      // If V is positive down, then atan(y,x) is correct?
+      // Let's try direct mapping.
+
+      // Bound check to avoid drawing off-screen or weird infinity
+      if (r > 10.0) return const SizedBox.shrink(); // Too far
+
+      return Positioned(
+        left: screenX - 20, // Center the 40px icon
+        top: screenY - 20,
+        child: GestureDetector(
+          onTap: () => controller.onHotspotTap(h.targetIndex),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Image.asset(
+                'assets/vtourskin_hotspot0.png',
+                width: 40,
+                height: 40,
+              ),
+              const SizedBox(height: 4),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                decoration: BoxDecoration(
+                  color: Colors.black54,
+                  borderRadius: BorderRadius.circular(4),
+                ),
+                child: Text(
+                  h.name,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 12,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    }).toList();
+  }
+
   Widget _buildHotspotButton({
     String? text,
     IconData? icon,
