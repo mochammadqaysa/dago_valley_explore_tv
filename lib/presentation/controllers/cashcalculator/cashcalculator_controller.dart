@@ -42,16 +42,21 @@ class CashcalculatorController {
     required bool tanpaDp,
   }) {
     final cacheKpr = _storage.kprCalculators;
+    // Safety check to handle potential null or empty list
+    if (cacheKpr == null || cacheKpr.isEmpty) {
+      return 0.0;
+    }
+
     print(
-      '💾 Cached KPR Calculators: ${cacheKpr!.first.dpDeveloperValue}, ${cacheKpr!.first.dpSyariahValue}',
+      '💾 Cached KPR Calculators: ${cacheKpr.first.dpDeveloperValue}, ${cacheKpr.first.dpSyariahValue}',
     );
     if (method == PaymentMethod.developer) {
       if (tanpaDp) return 0.0;
-      return harga * cacheKpr!.first.dpDeveloperValue;
+      return harga * cacheKpr.first.dpDeveloperValue;
     } else {
-      return harga * cacheKpr!.first.dpSyariahValue;
+      return harga * cacheKpr.first.dpSyariahValue;
     }
-  }
+  } 
 
   /// Fungsi PPMT - menghitung pembayaran pokok per periode
   double ppmt(double rate, int period, int nper, double pv) {

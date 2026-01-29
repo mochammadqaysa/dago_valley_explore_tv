@@ -34,6 +34,8 @@ class DetailProductController extends GetxController {
   // Total items (images + videos)
   int get totalItems => images.length + videos.length;
 
+  int get startIndex => images.isNotEmpty ? 1 : 0;
+
   // Video players
   final Map<int, VideoPlayerController?> videoControllers = {};
   final RxMap<int, bool> videoInitialized = <int, bool>{}.obs;
@@ -409,12 +411,14 @@ class DetailProductController extends GetxController {
   // Open fullscreen
   void openFullscreen() {
     isFullscreen.value = true;
-    // Initialize PageController dengan index saat ini
-    // Offset index jika images tidak kosong (karena index 0 diskip di UI)
-    int initialPage = currentIndex.value;
-    if (images.isNotEmpty && initialPage > 0) {
-      initialPage -= 1;
+
+    // Calculate initial page based on visual index
+    // currentIndex is the Data Index, convert to Visual Index
+    int initialPage = 0;
+    if (currentIndex.value >= startIndex) {
+      initialPage = currentIndex.value - startIndex;
     }
+
     pageController = PageController(initialPage: initialPage);
   }
 
@@ -429,40 +433,56 @@ class DetailProductController extends GetxController {
 
   // Navigate to next page
   void nextPage() {
-    final newIndex = currentIndex.value < totalItems - 1
-        ? currentIndex.value + 1
-        : 0;
+    // Calculate next Data Index
+    int nextDataIndex = currentIndex.value + 1;
 
-    // Update PageController jika fullscreen
+    // Wrap around logic
+    if (nextDataIndex >= totalItems) {
+      nextDataIndex = startIndex; // Loop back to first VISIBLE item
+    }
+
+    // Convert to Visual Index
+    int visualIndex = nextDataIndex - startIndex;
+    if (visualIndex < 0) visualIndex = 0;
+
+    // Update PageController (Visual Index)
     if (isFullscreen.value && pageController != null) {
       pageController!.animateToPage(
-        newIndex,
+        visualIndex,
         duration: const Duration(milliseconds: 300),
         curve: Curves.easeInOut,
       );
     }
 
-    // Update carousel utama
-    goToPage(newIndex);
+    // Update carousel utama (Visual Index)
+    goToPage(visualIndex);
   }
 
   // Navigate to previous page
   void previousPage() {
-    final newIndex = currentIndex.value > 0
-        ? currentIndex.value - 1
-        : totalItems - 1;
+    // Calculate previous Data Index
+    int prevDataIndex = currentIndex.value - 1;
 
-    // Update PageController jika fullscreen
+    // Wrap around logic
+    if (prevDataIndex < startIndex) {
+      prevDataIndex = totalItems - 1; // Go to last item
+    }
+
+    // Convert to Visual Index
+    int visualIndex = prevDataIndex - startIndex;
+    if (visualIndex < 0) visualIndex = 0;
+
+    // Update PageController (Visual Index)
     if (isFullscreen.value && pageController != null) {
       pageController!.animateToPage(
-        newIndex,
+        visualIndex,
         duration: const Duration(milliseconds: 300),
         curve: Curves.easeInOut,
       );
     }
 
-    // Update carousel utama
-    goToPage(newIndex);
+    // Update carousel utama (Visual Index)
+    goToPage(visualIndex);
   }
 
   // Handle booking
