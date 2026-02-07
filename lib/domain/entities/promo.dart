@@ -7,8 +7,8 @@ class Promo {
   final String subtitle;
   final String description;
   final String imageUrl;
-  final String tag1;
-  final String tag2;
+  final String? tag1;
+  final String? tag2;
   final PromoTranslation en;
 
   Promo({
@@ -18,8 +18,8 @@ class Promo {
     required this.subtitle,
     required this.description,
     required this.imageUrl,
-    required this.tag1,
-    required this.tag2,
+    this.tag1,
+    this.tag2,
     required this.en,
   });
 

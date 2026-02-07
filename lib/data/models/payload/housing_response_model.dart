@@ -12,9 +12,11 @@ class HousingResponseModel extends HousingResponse {
   @override
   factory HousingResponseModel.fromJson(Map<String, dynamic> json) =>
       HousingResponseModel(
-        housing: List.from(
-          json["housing"].map((x) => HousingModel.fromJson(x)),
-        ),
-        version: VersionModel.fromJson(json["versions"]),
+        housing: json["housing"] != null
+            ? List.from(json["housing"].map((x) => HousingModel.fromJson(x)))
+            : [],
+        version: json["versions"] != null
+            ? VersionModel.fromJson(json["versions"])
+            : VersionModel.empty(),
       );
 }

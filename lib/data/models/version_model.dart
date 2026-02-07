@@ -33,4 +33,13 @@ class VersionModel extends Version {
     siteplanVersion: json["siteplan_version"],
     kprCalculatorVersion: json["kpr_calculator_version"],
   );
+
+  factory VersionModel.empty() => VersionModel(
+    promoVersion: "0",
+    eventVersion: "0",
+    productVersion: "0",
+    brochureVersion: "0",
+    siteplanVersion: "0",
+    kprCalculatorVersion: "0",
+  );
 }

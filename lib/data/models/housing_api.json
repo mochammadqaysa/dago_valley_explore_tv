@@ -1,0 +1,241 @@
+{
+    "housing": [
+        {
+            "id": 1,
+            "name": "Dago Valley Bandung",
+            "alamat": "Jl. Cisitu Indah, Dago, Kecamatan Coblong, Kota Bandung, Jawa Barat 40135",
+            "logo": "https:\/\/housing.qaanii.com\/storage\/logos\/FuWFxkAUCh8bKCsZYyW9aAi0X5qZDJ7aVtFzrD8o.png",
+            "welcome_text": "Nikmati kenyamanan hidup dengan fasilitas lengkap dan lingkungan yang asri. Temukan rumah impian Anda di perumahan eksklusif ini. Hanya di Dago Valley Bandung",
+            "welcome_text_en": "Enjoy the comforts of life with complete facilities and a beautiful environment. Find your dream home in this exclusive residential area. Only at Dago Valley Bandung.",
+            "created_at": "2025-10-28T14:48:38.000000Z",
+            "updated_at": "2025-11-19T09:44:03.000000Z",
+            "promos": [
+                {
+                    "id": 5,
+                    "housing_id": "1",
+                    "title": "Foresta Luxury Home",
+                    "subtitle": "Dapatkan Rumah Mewah + Bonus BYD Atto 1",
+                    "description": "Rasakan pengalaman tinggal di hunian terbaik Dago Valley dengan Foresta\u2014rumah mewah modern bernuansa alam, berada di area dengan kualitas udara yang bersih dan sehat.\r\nNikmati penawaran eksklusif: dapatkan unit Foresta dan bonus mobil listrik BYD Atto 1.\r\nPersyaratan dan ketentuan berlaku.",
+                    "imageUrl": "https:\/\/housing.qaanii.com\/storage\/promo_images\/6QoCWqkNxYUhDbEdQXqvAbAZLG8ZkLnLjBJ0IEkP.jpg",
+                    "tag1": "Exclusive Promo",
+                    "tag2": "Luxury Living",
+                    "en": {
+                        "title": "Foresta Luxury Home",
+                        "subtitle": "Get Luxury Homes + BYD Atto 1 Bonus",
+                        "description": "Experience the best of Dago Valley with Foresta\u2014 a modern luxury home with a natural feel, located in an area with clean and healthy air quality.\r\nEnjoy exclusive offers: get a Foresta unit and a BYD Atto 1 electric car bonus.\r\nTerms and conditions apply.",
+                        "tag1": "Exclusive Deals",
+                        "tag2": "Luxury Living"
+                    },
+                    "created_at": "2025-11-24T07:46:50.000000Z",
+                    "updated_at": "2025-11-24T07:46:50.000000Z"
+                },
+                {
+                    "id": 6,
+                    "housing_id": "1",
+                    "title": "Free Full Furnished",
+                    "subtitle": "Benefit Eksklusif Tipe Harmoni",
+                    "description": "Free Full Furnish - Tipe Harmoni\r\n\r\nPilihan luas unit tersedia:\r\nLB.106 LT.112\r\nLB.112 LT.117\r\nLB.129 LT.144\r\n\r\nPromo berlaku dalam waktu terbatas dan dapat berakhir sewaktu-waktu.",
+                    "imageUrl": "https:\/\/housing.qaanii.com\/storage\/promo_images\/0u5aAB7Z2G3ptIWIoGm6CP5hGIpj6NVE4QTHZ4bG.jpg",
+                    "tag1": null,
+                    "tag2": null,
+                    "en": {
+                        "title": "Free Full Furnished",
+                        "subtitle": "Harmony Type Exclusive Benefit",
+                        "description": "Free Full Furnish - Harmony Type\r\n\r\nWide selection of units available:\r\nLB.106 LT.112\r\nLB.112 LT.117\r\nLB.129 LT.144\r\n\r\nPromo is valid for a limited time and may expire at any time.",
+                        "tag1": "",
+                        "tag2": ""
+                    },
+                    "created_at": "2026-01-30T08:58:41.000000Z",
+                    "updated_at": "2026-01-30T08:58:41.000000Z"
+                }
+            ],
+            "events": [
+                {
+                    "id": 1,
+                    "housing_id": "1",
+                    "title": "Visit Our House",
+                    "subtitle": "Jelajahi Hunian Impianmu",
+                    "description": "Rasakan pengalaman langsung menjelajahi rumah impian dalam acara Visiting House!\r\nKamu akan diajak berkeliling melihat desain interior, tata ruang, dan lingkungan sekitar secara langsung. Tim kami siap memberikan penjelasan lengkap mengenai spesifikasi bangunan, fasilitas, serta promo menarik yang hanya berlaku selama event berlangsung.",
+                    "imageUrl": "https:\/\/housing.qaanii.com\/storage\/event_images\/zuWQF0O5GXg1CJoU8UzNJNpSKPhM6kjJHILlSDLf.jpg",
+                    "tag1": "Datang, lihat, dan temukan rumah",
+                    "tag2": "House",
+                    "en": {
+                        "title": "Visit Our House",
+                        "subtitle": "Explore Your Dream Residence",
+                        "description": "Experience a dream home first-hand at the Visiting House event!\r\nYou will be invited to walk around to see interior design, spatial planning, and the surrounding environment in person. Our team is ready to provide a complete explanation of building specifications, facilities, and attractive promos that are only valid during the event.",
+                        "tag1": "Come, see, and find a home",
+                        "tag2": "House"
+                    },
+                    "images": [
+                        {
+                            "id": 51,
+                            "file_path": "https:\/\/housing.qaanii.com\/storage\/event_images\/1763180034_6917fe02c35a3.jpg",
+                            "file_name": "1763180034_6917fe02c35a3.jpg",
+                            "mime_type": "image\/jpeg",
+                            "file_size": "142407"
+                        },
+                        {
+                            "id": 52,
+                            "file_path": "https:\/\/housing.qaanii.com\/storage\/event_images\/1763180034_6917fe02c4553.jpg",
+                            "file_name": "1763180034_6917fe02c4553.jpg",
+                            "mime_type": "image\/jpeg",
+                            "file_size": "246367"
+                        },
+                        {
+                            "id": 53,
+                            "file_path": "https:\/\/housing.qaanii.com\/storage\/event_images\/1763180034_6917fe02c5fab.jpg",
+                            "file_name": "1763180034_6917fe02c5fab.jpg",
+                            "mime_type": "image\/jpeg",
+                            "file_size": "247084"
+                        },
+                        {
+                            "id": 54,
+                            "file_path": "https:\/\/housing.qaanii.com\/storage\/event_images\/1763180034_6917fe02c7e7d.jpg",
+                            "file_name": "1763180034_6917fe02c7e7d.jpg",
+                            "mime_type": "image\/jpeg",
+                            "file_size": "181761"
+                        },
+                        {
+                            "id": 55,
+                            "file_path": "https:\/\/housing.qaanii.com\/storage\/event_images\/1763180034_6917fe02c8a41.jpg",
+                            "file_name": "1763180034_6917fe02c8a41.jpg",
+                            "mime_type": "image\/jpeg",
+                            "file_size": "250027"
+                        },
+                        {
+                            "id": 56,
+                            "file_path": "https:\/\/housing.qaanii.com\/storage\/event_images\/1763180034_6917fe02c956e.jpg",
+                            "file_name": "1763180034_6917fe02c956e.jpg",
+                            "mime_type": "image\/jpeg",
+                            "file_size": "110223"
+                        },
+                        {
+                            "id": 57,
+                            "file_path": "https:\/\/housing.qaanii.com\/storage\/event_images\/1763180034_6917fe02c9f1d.jpg",
+                            "file_name": "1763180034_6917fe02c9f1d.jpg",
+                            "mime_type": "image\/jpeg",
+                            "file_size": "256195"
+                        }
+                    ],
+                    "videos": [
+                        {
+                            "id": 58,
+                            "file_path": "https:\/\/housing.qaanii.com\/storage\/event_videos\/1763180034_6917fe02cab34.mp4",
+                            "file_name": "1763180034_6917fe02cab34.mp4",
+                            "mime_type": "video\/mp4",
+                            "file_size": "9628573"
+                        }
+                    ],
+                    "created_at": "2025-10-28T14:53:15.000000Z",
+                    "updated_at": "2025-10-29T12:11:12.000000Z"
+                },
+                {
+                    "id": 2,
+                    "housing_id": "1",
+                    "title": "Tur Eksklusif Perumahan Baru",
+                    "subtitle": "Visiting House",
+                    "description": "Ikuti tur eksklusif Visiting House dan jadilah yang pertama melihat langsung unit rumah terbaru kami!\r\nNikmati suasana perumahan yang nyaman, modern, dan strategis, lengkap dengan berbagai fasilitas unggulan. Tim marketing kami akan mendampingi setiap pengunjung untuk menjelaskan detail proyek serta simulasi pembiayaan.",
+                    "imageUrl": "https:\/\/housing.qaanii.com\/storage\/event_images\/gEsex7jYBELjiBczA9yER9Y0Ynj38Y4ps37qgGkM.jpg",
+                    "tag1": "House",
+                    "tag2": "Tour",
+                    "en": {
+                        "title": "New Housing Exclusive Tour",
+                        "subtitle": "Visiting House",
+                        "description": "Take an exclusive tour of the Visiting House and be the first to see our newest home units in person!\r\nEnjoy a comfortable, modern, and strategic residential atmosphere, complete with superior facilities. Our marketing team will accompany each visitor to explain the details of the project and the financing simulation.",
+                        "tag1": "House",
+                        "tag2": "Tour"
+                    },
+                    "images": [],
+                    "videos": [],
+                    "created_at": "2025-10-28T14:54:03.000000Z",
+                    "updated_at": "2025-10-29T12:11:31.000000Z"
+                },
+                {
+                    "id": 3,
+                    "housing_id": "1",
+                    "title": "Kunjungi, Jelajahi, dan Rasakan Sendiri",
+                    "subtitle": "Visiting House",
+                    "description": "Dalam event Visiting House, kami membuka kesempatan bagi Anda untuk mengunjungi langsung lokasi hunian yang sedang dikembangkan.\r\nKegiatan ini bertujuan memberikan gambaran nyata tentang kualitas bangunan, akses lingkungan, serta potensi investasi jangka panjang.",
+                    "imageUrl": "https:\/\/housing.qaanii.com\/storage\/event_images\/4Xory5sjovwwFBlH4XfKiDmXHqYP3tpHj3y7qz82.jpg",
+                    "tag1": "Visit",
+                    "tag2": "Jelajah",
+                    "en": {
+                        "title": "Visit, Explore, and Experience It Yourself",
+                        "subtitle": "Visiting House",
+                        "description": "In the Visiting House event, we open the opportunity for you to visit directly the location of the dwelling that is being developed.\r\nThis activity aims to provide a real picture of the quality of buildings, environmental access, and long-term investment potential.",
+                        "tag1": "<g id=\"1\">Visit<\/g>",
+                        "tag2": "Discover"
+                    },
+                    "images": [
+                        {
+                            "id": 33,
+                            "file_path": "https:\/\/housing.qaanii.com\/storage\/event_images\/1763179588_6917fc444bad7.jpg",
+                            "file_name": "1763179588_6917fc444bad7.jpg",
+                            "mime_type": "image\/jpeg",
+                            "file_size": "142407"
+                        },
+                        {
+                            "id": 34,
+                            "file_path": "https:\/\/housing.qaanii.com\/storage\/event_images\/1763179588_6917fc444fe84.jpg",
+                            "file_name": "1763179588_6917fc444fe84.jpg",
+                            "mime_type": "image\/jpeg",
+                            "file_size": "246367"
+                        },
+                        {
+                            "id": 35,
+                            "file_path": "https:\/\/housing.qaanii.com\/storage\/event_images\/1763179588_6917fc4451819.jpg",
+                            "file_name": "1763179588_6917fc4451819.jpg",
+                            "mime_type": "image\/jpeg",
+                            "file_size": "247084"
+                        }
+                    ],
+                    "videos": [
+                        {
+                            "id": 36,
+                            "file_path": "https:\/\/housing.qaanii.com\/storage\/event_videos\/1763179588_6917fc4452a55.mp4",
+                            "file_name": "1763179588_6917fc4452a55.mp4",
+                            "mime_type": "video\/mp4",
+                            "file_size": "20040008"
+                        }
+                    ],
+                    "created_at": "2025-10-28T14:54:36.000000Z",
+                    "updated_at": "2025-10-29T12:11:47.000000Z"
+                }
+            ],
+            "products": [],
+            "brochures": [
+                {
+                    "id": 2,
+                    "housing_id": "1",
+                    "imageUrl": "https:\/\/housing.qaanii.com\/storage\/brochures\/3bztoeqzK1eEnO7K9MmeIwMlZwiER0ROwaxDN6tP.pdf",
+                    "created_at": "2025-11-28T03:38:15.000000Z",
+                    "updated_at": "2025-11-28T03:38:15.000000Z"
+                }
+            ],
+            "siteplans": [
+                {
+                    "id": 1,
+                    "housing_id": "1",
+                    "name": "Site Plan Tahap 1",
+                    "imageUrl": "https:\/\/housing.qaanii.com\/storage\/siteplans\/imuLOQVY8ZMe8r5DqKzdSDsGWqrxDino9HAeU6mg.jpg",
+                    "imageTahap2Url": "https:\/\/housing.qaanii.com\/storage\/siteplans\/DRdxwTP0xhoYVWRax6k70bI71bp8fBNvHDOeEK4K.jpg",
+                    "mapUrl": "https:\/\/housing.qaanii.com\/storage\/siteplans\/SEcOr8KvRm1AnpnDmAJzEifhSq3ueDLQj23rYRqi.jpg",
+                    "fasumUrl": "https:\/\/housing.qaanii.com\/storage\/siteplans\/HorS6q5oBmJSJt1FEKncLtdAtFeyTDR3y5XJrwm1.jpg",
+                    "timelineProgressUrl": "https:\/\/housing.qaanii.com\/storage\/siteplans\/DRjzA1QfLCRkJdWcLuKvBdW659OEhUNSl8sd57P4.jpg",
+                    "timelineProgressTahap2Url": "https:\/\/housing.qaanii.com\/storage\/siteplans\/bOErMoM424v0ic1LRp4nUGsKELah2HhDPOm0Nnmc.jpg",
+                    "created_at": "2025-10-29T06:57:33.000000Z",
+                    "updated_at": "2026-01-29T04:07:42.000000Z"
+                }
+            ],
+            "kpr_calculators": []
+        }
+    ],
+    "versions": {
+        "promo_version": "16",
+        "event_version": "20",
+        "product_version": "12",
+        "brochure_version": "1",
+        "siteplan_version": "1",
+        "kpr_calculator_version": "7"
+    }
+}
