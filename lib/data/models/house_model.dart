@@ -46,7 +46,7 @@ const List<HouseModel> houseModels = [
     jumlahUnit: 4,
     hargaCash: 2900000000,
     gambar: [
-      "assets/rumah/harmoni/harmoni_100_108/Sampul.png",
+      "assets/rumah/harmoni/harmoni_100_108/Sampul.jpg",
       "assets/rumah/harmoni/harmoni_100_108/Slide 1.jpg",
       "assets/rumah/harmoni/harmoni_100_108/Slide 2.jpg",
       "assets/rumah/harmoni/harmoni_100_108/Slide 3.jpg",
@@ -103,7 +103,7 @@ const List<HouseModel> houseModels = [
     jumlahUnit: 0,
     hargaCash: 0,
     gambar: [
-      "assets/rumah/harmoni/harmoni_140_108/Sampul.png",
+      "assets/rumah/harmoni/harmoni_140_108/Sampul.jpg",
       "assets/rumah/harmoni/harmoni_140_108/Slide 1.jpg",
       "assets/rumah/harmoni/harmoni_140_108/Slide 2.png",
       "assets/rumah/harmoni/harmoni_140_108/Slide 3.png",
@@ -142,7 +142,7 @@ const List<HouseModel> houseModels = [
     jumlahUnit: 3,
     hargaCash: 3099000000,
     gambar: [
-      "assets/rumah/harmoni/harmoni_106_112/Sampul dan Slide 1.png",
+      "assets/rumah/harmoni/harmoni_106_112/Sampul dan Slide 1.jpg",
       "assets/rumah/harmoni/harmoni_106_112/Slide 2.jpg",
       "assets/rumah/harmoni/harmoni_106_112/Slide 3.jpg",
       "assets/rumah/harmoni/harmoni_106_112/Slide 4.jpg",
@@ -196,7 +196,7 @@ const List<HouseModel> houseModels = [
     jumlahUnit: 2,
     hargaCash: 3273000000,
     gambar: [
-      "assets/rumah/harmoni/harmoni_112_117/Sampul dan Slide 1.png",
+      "assets/rumah/harmoni/harmoni_112_117/Sampul dan Slide 1.jpg",
       "assets/rumah/harmoni/harmoni_112_117/Slide 2.jpg",
       "assets/rumah/harmoni/harmoni_112_117/Slide 3.jpg",
       "assets/rumah/harmoni/harmoni_112_117/Slide 4.jpg",
@@ -251,7 +251,7 @@ const List<HouseModel> houseModels = [
     jumlahUnit: 7,
     hargaCash: 3868000000,
     gambar: [
-      "assets/rumah/harmoni/harmoni_129_144/Sampul.png",
+      "assets/rumah/harmoni/harmoni_129_144/Sampul.jpg",
       "assets/rumah/harmoni/harmoni_129_144/Slide 1.jpg",
       "assets/rumah/harmoni/harmoni_129_144/Slide 3.jpg",
       "assets/rumah/harmoni/harmoni_129_144/Slide 4.jpg",
@@ -300,7 +300,7 @@ const List<HouseModel> houseModels = [
     jumlahUnit: 0,
     hargaCash: 0,
     gambar: [
-      "assets/rumah/harmoni/harmoni_150_144/Sampul.png",
+      "assets/rumah/harmoni/harmoni_150_144/Sampul.jpg",
       "assets/rumah/harmoni/harmoni_150_144/Slide 1.jpg",
       "assets/rumah/harmoni/harmoni_150_144/Slide 2.png",
       "assets/rumah/harmoni/harmoni_150_144/Slide 3.png",
@@ -339,7 +339,7 @@ const List<HouseModel> houseModels = [
     jumlahUnit: 2,
     hargaCash: 3996000000,
     gambar: [
-      "assets/rumah/harmoni/harmoni_131_150/Sampul.png",
+      "assets/rumah/harmoni/harmoni_131_150/Sampul.jpg",
       "assets/rumah/harmoni/harmoni_131_150/Slide 1.jpg",
       "assets/rumah/harmoni/harmoni_131_150/Slide 3.jpg",
       "assets/rumah/harmoni/harmoni_131_150/Slide 4.jpg",
@@ -388,7 +388,7 @@ const List<HouseModel> houseModels = [
     jumlahUnit: 2,
     hargaCash: 0,
     gambar: [
-      "assets/rumah/harmoni/harmoni_131_169/Sampul dan slide 1.png",
+      "assets/rumah/harmoni/harmoni_131_169/Sampul dan slide 1.jpg",
       "assets/rumah/harmoni/harmoni_131_169/Slide 2.png",
       "assets/rumah/harmoni/harmoni_131_169/Slide 3.png",
       "assets/rumah/harmoni/harmoni_131_169/Slide 4.png",
@@ -435,7 +435,7 @@ const List<HouseModel> houseModels = [
     jumlahUnit: 2,
     hargaCash: 5050000000,
     gambar: [
-      "assets/rumah/foresta/foresta_144_190/Sampul.png",
+      "assets/rumah/foresta/foresta_144_190/Sampul.jpg",
       "assets/rumah/foresta/foresta_144_190/Slide 1.jpg",
       "assets/rumah/foresta/foresta_144_190/Slide 2.png",
       "assets/rumah/foresta/foresta_144_190/Slide 3.png",
@@ -515,7 +515,7 @@ const List<HouseModel> houseModels = [
     jumlahUnit: 1,
     hargaCash: 5753000000,
     gambar: [
-      "assets/rumah/foresta/foresta_144_228/Sampul & slide 1.png",
+      "assets/rumah/foresta/foresta_144_228/Sampul & slide 1.jpg",
       "assets/rumah/foresta/foresta_144_228/Slide 2.png",
       "assets/rumah/foresta/foresta_144_228/Slide 3.png",
       "assets/rumah/foresta/foresta_144_228/Slide 4.jpg",
@@ -551,7 +551,7 @@ const List<HouseModel> houseModels = [
     jumlahUnit: 2,
     hargaCash: 6164000000,
     gambar: [
-      "assets/rumah/foresta/foresta_193_228/Sampul.png",
+      "assets/rumah/foresta/foresta_193_228/Sampul.jpg",
       "assets/rumah/foresta/foresta_193_228/Slide 1.jpg",
       "assets/rumah/foresta/foresta_193_228/Slide 2.png",
       "assets/rumah/foresta/foresta_193_228/Slide 3.png",
@@ -600,7 +600,7 @@ const List<HouseModel> houseModels = [
     jumlahUnit: 2,
     hargaCash: 0,
     gambar: [
-      "assets/rumah/foresta/foresta_220_228/Sampul.png",
+      "assets/rumah/foresta/foresta_220_228/Sampul.jpg",
       "assets/rumah/foresta/foresta_220_228/Slide 2.png",
       "assets/rumah/foresta/foresta_220_228/Slide 3.png",
       "assets/rumah/foresta/foresta_220_228/Slide 4.jpg",
@@ -638,7 +638,7 @@ const List<HouseModel> houseModels = [
     jumlahUnit: 1,
     hargaCash: 6292000000,
     gambar: [
-      "assets/rumah/foresta/foresta_193_235/Sampul dan Slide 1.png",
+      "assets/rumah/foresta/foresta_193_235/Sampul dan Slide 1.jpg",
       "assets/rumah/foresta/foresta_193_235/Slide 2.png",
       "assets/rumah/foresta/foresta_193_235/Slide 3.png",
       "assets/rumah/foresta/foresta_193_235/Slide 4.png",
@@ -684,7 +684,7 @@ const List<HouseModel> houseModels = [
     jumlahUnit: 2,
     hargaCash: 0,
     gambar: [
-      "assets/rumah/foresta/foresta_261_186/Sampul.png",
+      "assets/rumah/foresta/foresta_261_186/Sampul.jpg",
       "assets/rumah/foresta/foresta_261_186/Slide 1.jpg",
       "assets/rumah/foresta/foresta_261_186/Slide 2.jpg",
       "assets/rumah/foresta/foresta_261_186/Slide 3.jpg",
@@ -722,7 +722,7 @@ const List<HouseModel> houseModels = [
     jumlahUnit: 2,
     hargaCash: 1949000000,
     gambar: [
-      "assets/rumah/tropica/tropica_110_60/Sampul.png",
+      "assets/rumah/tropica/tropica_110_60/Sampul.jpg",
       "assets/rumah/tropica/tropica_110_60/Slide 1.jpg",
       "assets/rumah/tropica/tropica_110_60/Slide 2.png",
       "assets/rumah/tropica/tropica_110_60/Slide 3.png",
@@ -761,7 +761,7 @@ const List<HouseModel> houseModels = [
     jumlahUnit: 2,
     hargaCash: 2112000000,
     gambar: [
-      "assets/rumah/tropica/tropica_131_60/Sampul.png",
+      "assets/rumah/tropica/tropica_131_60/Sampul.jpg",
       "assets/rumah/tropica/tropica_131_60/Slide 1.jpg",
       "assets/rumah/tropica/tropica_131_60/Slide 2.png",
       "assets/rumah/tropica/tropica_131_60/Slide 3.png",
@@ -801,7 +801,7 @@ const List<HouseModel> houseModels = [
     jumlahUnit: 2,
     hargaCash: 2583000000,
     gambar: [
-      "assets/rumah/tropica/tropica_122_90/Sampul.png",
+      "assets/rumah/tropica/tropica_122_90/Sampul.jpg",
       "assets/rumah/tropica/tropica_122_90/Slide 1.jpg",
       "assets/rumah/tropica/tropica_122_90/Slide 2.png",
       "assets/rumah/tropica/tropica_122_90/Slide 3.png",
