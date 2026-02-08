@@ -730,6 +730,7 @@ const List<HouseModel> houseModels = [
       "assets/rumah/tropica/tropica_110_60/Slide 5.jpg",
       "assets/rumah/tropica/tropica_110_60/Slide 6.jpg",
     ],
+    video: ["assets/rumah/tropica_110_60.mp4"],
 
     cicilanData: {
       "kpr_syariah": {
@@ -770,6 +771,7 @@ const List<HouseModel> houseModels = [
       "assets/rumah/tropica/tropica_131_60/Slide 6.jpg",
       "assets/rumah/tropica/tropica_131_60/Slide 7.jpg",
     ],
+    video: ["assets/rumah/tropica_131_60.mp4"],
 
     cicilanData: {
       "kpr_syariah": {
@@ -809,6 +811,7 @@ const List<HouseModel> houseModels = [
       "assets/rumah/tropica/tropica_122_90/Slide 5.jpg",
       "assets/rumah/tropica/tropica_122_90/Slide 6.jpg",
     ],
+    video: ["assets/rumah/tropica_122_90.mp4"],
 
     cicilanData: {
       "kpr_syariah": {

@@ -497,16 +497,21 @@ class ProductDetailPage extends GetView<DetailProductController> {
               // Play/Pause overlay (tengah)
               if (!isPlaying)
                 Center(
-                  child: Container(
-                    padding: const EdgeInsets.all(20),
-                    decoration: BoxDecoration(
-                      color: Colors.black.withOpacity(0.6),
-                      shape: BoxShape.circle,
-                    ),
-                    child: const Icon(
-                      Icons.play_arrow,
-                      color: Colors.white,
-                      size: 50,
+                  child: GestureDetector(
+                    onTap: () {
+                      controller.toggleVideoPlayback(index);
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.all(20),
+                      decoration: BoxDecoration(
+                        color: Colors.black.withOpacity(0.6),
+                        shape: BoxShape.circle,
+                      ),
+                      child: const Icon(
+                        Icons.play_arrow,
+                        color: Colors.white,
+                        size: 50,
+                      ),
                     ),
                   ),
                 ),
@@ -1029,16 +1034,21 @@ class ProductDetailPage extends GetView<DetailProductController> {
             ),
             if (!isPlaying)
               Center(
-                child: Container(
-                  padding: const EdgeInsets.all(20),
-                  decoration: BoxDecoration(
-                    color: Colors.black.withOpacity(0.6),
-                    shape: BoxShape.circle,
-                  ),
-                  child: const Icon(
-                    Icons.play_arrow,
-                    color: Colors.white,
-                    size: 50,
+                child: GestureDetector(
+                  onTap: () {
+                    controller.toggleVideoPlayback(index);
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.all(20),
+                    decoration: BoxDecoration(
+                      color: Colors.black.withOpacity(0.6),
+                      shape: BoxShape.circle,
+                    ),
+                    child: const Icon(
+                      Icons.play_arrow,
+                      color: Colors.white,
+                      size: 50,
+                    ),
                   ),
                 ),
               ),
